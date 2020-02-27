@@ -1,0 +1,30 @@
+﻿/*
+-- Mudando o encoding para utc
+*/
+SET CLIENT_ENCODING = 'UTF8';
+
+/*
+-- Adicionando os relacionamentos de criação e alteração de membro
+*/
+alter table member add constraint created_user_member foreign key(created_user) references member(id) on DELETE CASCADE;
+alter table member add constraint updated_user_member foreign key(updated_user) references member(id) on DELETE CASCADE;
+
+/*
+-- Adicionando os relacionamentos de criação e alteração de membro
+*/
+create table access(
+id SERIAL PRIMARY KEY,
+member INT NOT NULL,
+password_access VARCHAR(255) NOT NULL,
+privileges_m VARCHAR(50) NOT NULL,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+CONSTRAINT access_member FOREIGN KEY (member) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a view de Login
+
+create or replace view Login AS
+select access.member, member.cpf, access.password_access, access.privileges_m from member JOIN access on member.id = access.member
+*/
