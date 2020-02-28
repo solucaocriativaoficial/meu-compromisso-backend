@@ -12,9 +12,9 @@ alter table member add constraint updated_user_member foreign key(updated_user) 
 /*
 -- Adicionando os relacionamentos de criação e alteração de membro
 */
-create table access(
+CREATE OR REPLACE TABLE access(
 id SERIAL PRIMARY KEY,
-member INT NOT NULL,
+member INT NOT NULL UNIQUE,
 password_access VARCHAR(255) NOT NULL,
 privileges_m VARCHAR(50) NOT NULL,
 created_at VARCHAR(19) NOT NULL,
@@ -24,7 +24,191 @@ CONSTRAINT access_member FOREIGN KEY (member) REFERENCES member(id) ON DELETE CA
 
 /*
 * Criando a view de Login
-
+*/
 create or replace view Login AS
 select access.member, member.cpf, access.password_access, access.privileges_m from member JOIN access on member.id = access.member
+
+/*
+* Criando a tabela "division" e seus relacionamentos
 */
+CREATE TABLE division(
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL UNIQUE,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+created_user INT,
+updated_user INT,
+CONSTRAINT division_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT division_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "união" e seus relacionamentos
+*/
+CREATE TABLE unity(
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL UNIQUE,
+division INT NOT NULL,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+created_user INT,
+updated_user INT,
+CONSTRAINT unity_division FOREIGN KEY(division) REFERENCES division(id) ON DELETE CASCADE,
+CONSTRAINT unity_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT unity_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "associação" e seus relacionamentos
+*/
+CREATE TABLE association(
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL UNIQUE,
+unity INT NOT NULL,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+created_user INT,
+updated_user INT,
+CONSTRAINT association_unity FOREIGN KEY(unity) REFERENCES unity(id) ON DELETE CASCADE,
+CONSTRAINT association_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT association_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "distrito e o pastor responsavel" e seus relacionamentos
+*/
+CREATE TABLE district(
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+association INT NOT NULL,
+shepderd INT NOT NULL,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+created_user INT,
+updated_user INT,
+CONSTRAINT district_association FOREIGN KEY(association) REFERENCES association(id) ON DELETE CASCADE,
+CONSTRAINT district_shepderd FOREIGN KEY(shepderd) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT district_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT district_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "igreja" e seus relacionamentos
+*/
+CREATE TABLE churc(
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+front_image VARCHAR(255),
+zipcode VARCHAR(9) NOT NULL,
+address VARCHAR(255) NOT NULL,
+neightborhood VARCHAR(255),
+references_address VARCHAR(100),
+city VARCHAR(255) DEFAULT 'Comodoro',
+state VARCHAR(2) DEFAULT 'MT',
+country VARCHAR(255) DEFAULT 'Brasil',
+district INT NOT NULL,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+created_user INT,
+updated_user INT,
+CONSTRAINT churc_district FOREIGN KEY(district) REFERENCES district(id) ON DELETE CASCADE,
+CONSTRAINT churc_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT churc_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
+);
+
+
+/*
+* Criando a tabela "departamentos da igreja" e seus relacionamentos
+*/
+CREATE TABLE department(
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL UNIQUE,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+created_user INT,
+updated_user INT,
+CONSTRAINT department_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT department_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "departamentos do ano atual" e seus relacionamentos
+*/
+CREATE TABLE currents_departments(
+id SERIAL PRIMARY KEY,
+department INT NOT NULL,
+member INT NOT NULL,
+member_role VARCHAR(200) NOT NULL,
+year INT NOT NULL,
+churc INT NOT NULL,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+created_user INT,
+updated_user INT,
+CONSTRAINT departament_department FOREIGN KEY(department) REFERENCES department(id) ON DELETE CASCADE,
+CONSTRAINT departament_member FOREIGN KEY(member) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT departament_churc FOREIGN KEY(churc) REFERENCES churc(id) ON DELETE CASCADE,
+CONSTRAINT departament_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT departament_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "Escala" e seus relacionamentos
+*/
+CREATE TABLE scale(
+id SERIAL PRIMARY KEY,
+scale_type VARCHAR(200) NOT NULL,
+churc INT NOT NULL,
+member INT,
+department INT,
+visitor_member VARCHAR(255),
+scale_date DATE,
+confirmed_by_member VARCHAR(3) NOT NULL DEFAULT 'não',
+scale_responsible INT NOT NULL,
+created_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19) NOT NULL,
+created_user INT,
+updated_user INT,
+CONSTRAINT scale_churc FOREIGN KEY(churc) REFERENCES churc(id) ON DELETE CASCADE,
+CONSTRAINT scale_member FOREIGN KEY(member) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT scale_department FOREIGN KEY(department) REFERENCES department(id) ON DELETE CASCADE,
+CONSTRAINT scale_responsible FOREIGN KEY(scale_responsible) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT scale_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
+CONSTRAINT scale_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "confirmação de Escala" e seus relacionamentos
+*/
+CREATE TABLE confirmed_scale(
+id SERIAL PRIMARY KEY,
+scale INT NOT NULL,
+theme_for_action VARCHAR(100),
+confirmation_date VARCHAR(19) NOT NULL,
+confirmation_member INT NOT NULL,
+CONSTRAINT scale_scale FOREIGN KEY(scale) REFERENCES scale(id) ON DELETE CASCADE,
+CONSTRAINT scale_member FOREIGN KEY(confirmation_member) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "Pedidos de troca" e seus relacionamentos
+*/
+CREATE TABLE change_request(
+id SERIAL PRIMARY KEY,
+scale INT NOT NULL,
+requested_member INT NOT NULL,
+accept_date DATE NOT NULL,
+CONSTRAINT change_request_scale FOREIGN KEY(scale) REFERENCES scale(id) ON DELETE CASCADE,
+CONSTRAINT change_request_member FOREIGN KEY(requested_member) REFERENCES member(id) ON DELETE CASCADE
+);
+
+/*
+* Criando a tabela "notificações" e seus relacionamentos
+*/
+CREATE TABLE notification(
+id SERIAL PRIMARY KEY,
+scale INT NOT NULL,
+displayed_notification VARCHAR(19), /*Data que foi mostrado a notificação*/
+describe_notification VARCHAR(255),
+CONSTRAINT notification_scale FOREIGN KEY(scale) REFERENCES scale(id) ON DELETE CASCADE
+);

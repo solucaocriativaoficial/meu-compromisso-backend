@@ -7,3 +7,7 @@ const client = new Client({
     database: settings_database.database,
     password: settings_database.password
 });
+
+client.connect();
+
+module.exports = client;

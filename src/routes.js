@@ -3,7 +3,7 @@ const router = express();
 const MemberController = require('./controllers/MemberController');
 const AccessController = require('./controllers/AccessController');
 const LoginController = require('./controllers/LoginController');
-const dadosController = require('./controllers/dadosController')
+const DivisionController = require('./controllers/DivisionController');
 
 // Member
 router.get('/member', MemberController.timeline)
@@ -14,13 +14,19 @@ router.put('/member/profile/:id', MemberController.update)
 router.delete('/member/:id', MemberController.delete)
 
 // Access
-//router.delete('/access/:id', AccessController.delete)
-//router.post('/access/add', AccessController.insert)
+router.delete('/access/:id', AccessController.delete)
+router.put('/access/update-password', AccessController.update_password)
+router.put('/access/update-privileges', AccessController.update_privileges)
 router.post('/access/add', AccessController.insert)
 
 //Validation login
-router.post('/login', LoginController.validation)
+router.post('/validation', LoginController.validation)
 
-//test
-router.get('/dados', dadosController.test)
+
+//Division
+router.get('/division', DivisionController.findAll)
+router.get('/division/especific/:id', DivisionController.findAll)
+router.post('/division/add', DivisionController.insert)
+router.put('/division/:id', DivisionController.update)
+router.delete('/division/:id', DivisionController.delete)
 module.exports = router;

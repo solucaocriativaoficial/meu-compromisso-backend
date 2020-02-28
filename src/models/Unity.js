@@ -2,29 +2,31 @@ const Sequelize = require('sequelize');
 const settings_database = require('../config/connection_sequelize');
 const configTableGeral = require('../config/confTablesGeral');
 
-const Access = settings_database.define('access', {
-    id:{
+const Unity = settings_database.define('unity', {
+    id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    member: {
-        type: Sequelize.INTEGER,
-    },
-    password_access:{
+    name: {
         type: Sequelize.STRING(255),
         allowNull: false,
     },
-    privileges_m: {
-        type: Sequelize.STRING(50),
-        defaultValue: "normal"
+    division:{
+        type: Sequelize.INTEGER,
     },
     created_at: {
-        type: Sequelize.STRING(19)
+        type: Sequelize.STRING(19),
     },
     updated_at: {
-        type: Sequelize.STRING(19)
+        type: Sequelize.STRING(19),
+    },
+    created_user:{
+        type: Sequelize.INTEGER,
+    },
+    updated_user: {
+        type: Sequelize.INTEGER,
     }
 }, configTableGeral)
 
-module.exports = Access;
+module.exports = Unity;
