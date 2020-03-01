@@ -212,3 +212,19 @@ displayed_notification VARCHAR(19), /*Data que foi mostrado a notificação*/
 describe_notification VARCHAR(255),
 CONSTRAINT notification_scale FOREIGN KEY(scale) REFERENCES scale(id) ON DELETE CASCADE
 );
+
+/*
+* Criando a view que ira mostrar todos os registros aonde o membro esta escalado
+*/
+CREATE OR REPLACE VIEW scale_complete AS
+SELECT
+scale.id,
+scale.churc AS id_churc,
+churc.name AS churc,
+scale.member AS id_member,
+member.complete_name AS member_name,
+scale.scale_date,
+scale.confirmed_by_member
+ FROM scale
+ JOIN churc on scale.churc = churc.id
+ JOIN member on scale.member = member.id
