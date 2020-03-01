@@ -1,5 +1,5 @@
 module.exports = {
-    getError(status, complete_error){
+    getError(complete_error){
         console.log(complete_error)
     }
 }
