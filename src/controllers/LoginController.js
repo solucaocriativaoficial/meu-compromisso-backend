@@ -13,8 +13,9 @@ module.exports = {
         connection_pg
         .query(comand)
         .then(content => {
-            if(content.length){
-                res.json(content)
+            const { rowCount, rows } = content;
+            if(rowCount){
+                res.json(rows)
             }
             else{
                 res.json({ message: 'CPF ou Senha inválidos!', status: "ok" })
@@ -23,7 +24,7 @@ module.exports = {
         .catch(error => {
             const status = "erro";
             res.json({ message: "Erro na consulta!", status: status, complete_erro: error})
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     }
 }

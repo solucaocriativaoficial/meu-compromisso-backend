@@ -4,7 +4,9 @@ const error_handling = require('../utils/ErrorHandling');
 
 module.exports = {
     findAll(req, res){
-        Model.findAll()
+        Model.findAll({
+            order: ['complete_name']
+        })
         .then(content => {
             if(content.length){
                 res.json(content)
@@ -15,7 +17,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error})
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     },
     timeline(req, res){
@@ -35,7 +37,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
-            error_handling(status, error);s
+            error_handling.getError(error);
         })
     },
     findOne(req, res){
@@ -54,7 +56,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error})
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     },
     insert(req, res){
@@ -96,7 +98,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro ao cadastrar membro!", status: "erro", complete_erro: error})
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     },
     delete(req, res){
@@ -110,7 +112,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro ao deletar", status: "erro", complete_erro: error })
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     },
     update(req, res){
@@ -155,7 +157,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro ao atualizar!", status: "erro", complete_erro:error })
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     }
 }

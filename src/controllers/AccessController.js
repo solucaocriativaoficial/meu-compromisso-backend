@@ -22,7 +22,7 @@ module.exports = {
             })
             .catch(error => {
                 res.json({ message: "Erro ao cadastrar acesso!", status: "erro", complete_erro: error});
-                error_handling(status, error);
+                error_handling.getError(error);
             })
     },
     delete(req, res) {
@@ -36,7 +36,7 @@ module.exports = {
             })
             .catch(error => {
                 res.json({ message: "Erro ao deletar", status: "erro", complete_erro: error});
-                error_handling(status, error);
+                error_handling.getError(error);
             })
     },
     update_password(req, res) {
@@ -57,7 +57,7 @@ module.exports = {
             })
             .catch(error => {
                 res.json({ message: "Erro ao atualizar senha!", status: "erro", complete_erro: error});
-                error_handling(status, error);
+                error_handling.getError(error);
             })
     },
     update_privileges(req, res) {
@@ -78,7 +78,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro ao atualizar privilégios!", status: "erro", complete_erro: error});
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     }
 }

@@ -13,6 +13,10 @@ module.exports = {
                 res.json({ message: 'Nenhum registro encontrado', status: "ok" })
             }
         })
+        .catch(error => {
+            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error})
+            error_handling.getError(error);
+        })
     },
     findOne(req, res){
         Model.findAll({
@@ -28,6 +32,10 @@ module.exports = {
                 res.json({ message: 'Nenhum registro encontrado', status: "ok" })
             }
         })
+        .catch(error => {
+            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error})
+            error_handling.getError(error);
+        })
     },
     insert(req, res){
         const { name, created_user } = req.body;
@@ -42,7 +50,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro ao cadastrar divisão!", status: "erro", complete_erro: error})
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     },
     delete(req, res){
@@ -56,7 +64,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro ao deletar divisão!", status: "erro", complete_erro: error})
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     },
     update(req, res){
@@ -75,7 +83,7 @@ module.exports = {
         })
         .catch(error => {
             res.json({ message: "Erro ao atualizar divisão!", status: "erro", complete_erro: error})
-            error_handling(status, error);
+            error_handling.getError(error);
         })
     }
 }
