@@ -202,7 +202,9 @@ CREATE TABLE change_request(
 id SERIAL PRIMARY KEY,
 scale INT NOT NULL,
 requested_member INT NOT NULL,
-accept_date DATE NOT NULL,
+requested_date DATE NOT NULL,
+status_requisition VARCHAR(7),
+accept_date DATE,
 CONSTRAINT change_request_scale FOREIGN KEY(scale) REFERENCES scale(id) ON DELETE CASCADE,
 CONSTRAINT change_request_member FOREIGN KEY(requested_member) REFERENCES member(id) ON DELETE CASCADE
 );

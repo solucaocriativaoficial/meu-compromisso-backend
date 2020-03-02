@@ -14,6 +14,12 @@ const Change_request = settings_database.define('change_request', {
     requested_member: {
         type: Sequelize.INTEGER,
     },
+    requested_date: {
+        type: Sequelize.DATEONLY,
+    },
+    status_requisition:{
+        type: Sequelize.STRING(7),
+    },
     accept_date: {
         type: Sequelize.DATEONLY,
     }
