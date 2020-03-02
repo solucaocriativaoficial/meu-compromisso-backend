@@ -23,7 +23,8 @@ router.put('/access/update-privileges', AccessController.update_privileges)
 router.post('/access/add', AccessController.insert)
 
 //Validation login
-router.post('/validation', LoginController.validation)
+router.post('/validation/cpf', LoginController.validation_cpf)
+router.post('/validation/password', LoginController.validation_password)
 
 
 //Division
