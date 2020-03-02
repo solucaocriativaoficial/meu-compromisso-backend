@@ -116,6 +116,11 @@ CONSTRAINT churc_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON
 CONSTRAINT churc_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
 );
 
+/*
+* Criando o relacionamento entre igreja e membro
+*/
+alter table member add constraint churc_member foreign key(churc) references churc(id) on DELETE CASCADE;
+
 
 /*
 * Criando a tabela "departamentos da igreja" e seus relacionamentos
