@@ -38,18 +38,19 @@ module.exports = {
         })
     },
     insert(req, res){
-        const { name, created_user } = req.body;
+        const { name, unity, created_user } = req.body;
         Model.create({
             name: name,
+            unity: unity,
             created_at: Date.timestampCurrent(),
             updated_at: Date.timestampCurrent(),
             created_user: created_user
         })
         .then(content => {
-            res.json({ message: 'Divisão cadastrada com sucesso!', status: "ok" })
+            res.json({ message: 'Associação cadastrada com sucesso!', status: "ok" })
         })
         .catch(error => {
-            res.json({ message: "Erro ao cadastrar divisão!", status: "erro", complete_erro: error})
+            res.json({ message: "Erro ao cadastrar associação!", status: "erro", complete_erro: error})
             error_handling.getError(error);
         })
     },
@@ -60,17 +61,18 @@ module.exports = {
             }
         })
         .then(content => {
-            res.json({ message: 'Divisão deletada com sucesso!', status: "ok" })
+            res.json({ message: 'Associação deletada com sucesso!', status: "ok" })
         })
         .catch(error => {
-            res.json({ message: "Erro ao deletar divisão!", status: "erro", complete_erro: error})
+            res.json({ message: "Erro ao deletar associação!", status: "erro", complete_erro: error})
             error_handling.getError(error);
         })
     },
     update(req, res){
-        const { name, updated_user } = req.body;
+        const { name, unity, updated_user } = req.body;
         Model.update({
             name: name,
+            unity: unity,
             updated_at: Date.timestampCurrent(),
             updated_user: updated_user,
         }, {
@@ -79,10 +81,10 @@ module.exports = {
             }
         })
         .then(content => {
-            res.json({ message: 'Divisão atualizada com sucesso!', status: "ok" })
+            res.json({ message: 'Associação atualizada com sucesso!', status: "ok" })
         })
         .catch(error => {
-            res.json({ message: "Erro ao atualizar divisão!", status: "erro", complete_erro: error})
+            res.json({ message: "Erro ao atualizar associação!", status: "erro", complete_erro: error})
             error_handling.getError(error);
         })
     }
