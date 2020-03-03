@@ -223,15 +223,35 @@ CONSTRAINT notification_scale FOREIGN KEY(scale) REFERENCES scale(id) ON DELETE 
 /*
 * Criando a view que ira mostrar todos os registros aonde o membro esta escalado
 */
-CREATE OR REPLACE VIEW scale_complete AS
+CREATE OR REPLACE VIEW myScale AS
 SELECT
 scale.id,
+scale.scale_type,
 scale.churc AS id_churc,
 churc.name AS churc,
 scale.member AS id_member,
-member.complete_name AS member_name,
+scale.department AS id_deparment,
+department.name AS deparment,
 scale.scale_date,
 scale.confirmed_by_member
  FROM scale
  JOIN churc on scale.churc = churc.id
  JOIN member on scale.member = member.id
+ JOIN department on scale.department = department.id;
+
+
+/*
+Criando a view dos departamentos do ano atual
+*/
+CREATE VIEW view_current_department AS 
+SELECT
+currents_departments.id,
+department.name AS department,
+member.complete_name,
+currents_departments.member_role,
+currents_departments.year,
+churc.name AS churc
+FROM currents_departments
+JOIN member ON currents_departments.member = member.id
+JOIN department ON currents_departments.department = department.id
+JOIN churc ON currents_departments.churc = churc.id;
