@@ -39,7 +39,7 @@ module.exports = {
     },
     insert(req, res){
         const {
-            churc_name,
+            name,
             front_image,
             zipcode,
             address,
@@ -52,7 +52,7 @@ module.exports = {
             created_user
         } = req.body;
         Model.create({
-            churc_name: churc_name,
+            name: name,
             front_image: front_image,
             zipcode: zipcode,
             address: address,
@@ -90,7 +90,7 @@ module.exports = {
     },
     update(req, res){
         const {
-            churc_name,
+            name,
             front_image,
             zipcode,
             address,
@@ -103,7 +103,7 @@ module.exports = {
             updated_user
         } = req.body;
         Model.update({
-            churc_name: churc_name,
+            name: name,
             front_image: front_image,
             zipcode: zipcode,
             address: address,
