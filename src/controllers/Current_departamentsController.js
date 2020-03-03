@@ -11,8 +11,8 @@ module.exports = {
         connection_pg
         .query(comand)
         .then(content => {
-            const {countRows, rows} = content
-            if(countRows){
+            const {rowCount, rows} = content
+            if(rowCount){
                 res.json(rows)
             }
             else{
@@ -34,14 +34,15 @@ module.exports = {
         } = req.body;
 
         const comand = {
-            text: "INSERT INTO currents_departments (department, member, member_role, year, churc, created_at, created_user) VALUES ($1,$2,$3,$4,$5,$6)",
+            text: "INSERT INTO currents_departments (department, member, member_role, year, churc, created_at, updated_at, created_user) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
             values:[
                 department,
                 member,
                 member_role,
-                Date.yearCurrent,
+                Date.yearCurrent(),
                 churc,
-                Date.timestampCurrent,
+                Date.timestampCurrent(),
+                Date.timestampCurrent(),
                 created_user
             ]
         };
@@ -49,10 +50,10 @@ module.exports = {
         .query(comand)
         .then(content => {
             const { rows } = content
-            res.json({ message: 'Cadastrado com sucesso!', status: "ok" , tudo: rows, mais: content})
+            res.json({ message: 'Cadastrado com sucesso!', status: "ok"})
         })
         .catch(error => {
-            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
+            res.json({ message: "Erro ao cadastrar!", status: "erro", complete_erro: error});
             error_handling.getError(error);
         })
     },
