@@ -1,32 +1,19 @@
+const connection_pg = require('../config/connection_pg');
 const Model = require('../models/Currents_departments');
 const Date = require('../utils/Date');
 const error_handling = require('../utils/ErrorHandling');
 
 module.exports = {
     findAll(req, res){
-        Model.findAll()
+        const comand = {
+            text: "SELECT * FROM view_current_department"
+        };
+        connection_pg
+        .query(comand)
         .then(content => {
-            if(content.length){
-                res.json(content)
-            }
-            else{
-                res.json({ message: 'Nenhum registro encontrado', status: "ok" })
-            }
-        })
-        .catch(error => {
-            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
-            error_handling.getError(error);
-        })
-    },
-    findOne(req, res){
-        Model.findAll({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(content => {
-            if(content.length){
-                res.json(content)
+            const {countRows, rows} = content
+            if(countRows){
+                res.json(rows)
             }
             else{
                 res.json({ message: 'Nenhum registro encontrado', status: "ok" })
@@ -39,35 +26,40 @@ module.exports = {
     },
     insert(req, res){
         const {
-            departament,
+            department,
             member,
             member_role,
-            year,
             churc,
             created_user
         } = req.body;
-        Model.create({
-            departament: departament,
-            member: member,
-            member_role: member_role,
-            year: year,
-            churc: churc,
-            created_at: Date.timestampCurrent(),
-            updated_at: Date.timestampCurrent(),
-            created_user: created_user
-        })
+
+        const comand = {
+            text: "INSERT INTO currents_departments (department, member, member_role, year, churc, created_at, created_user) VALUES ($1,$2,$3,$4,$5,$6)",
+            values:[
+                department,
+                member,
+                member_role,
+                Date.yearCurrent,
+                churc,
+                Date.timestampCurrent,
+                created_user
+            ]
+        };
+        connection_pg
+        .query(comand)
         .then(content => {
-            res.json({ message: 'Cadastrado com sucesso!', status: "ok" })
+            const { rows } = content
+            res.json({ message: 'Cadastrado com sucesso!', status: "ok" , tudo: rows, mais: content})
         })
         .catch(error => {
-            res.json({ message: "Erro ao cadastrar!", status: "erro", complete_erro: error})
+            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
             error_handling.getError(error);
         })
     },
     delete(req, res){
         Model.destroy({
             where: {
-                id: req.params.id
+                id: req.body.id
             }
         })
         .then(content => {
@@ -87,15 +79,16 @@ module.exports = {
             churc,
             updated_user
         } = req.body;
+
         Model.update({
             departament: departament,
             member: member,
             member_role: member_role,
             year: year,
             churc: churc,
-            updated_at: Date.timestampCurrent(),
-            updated_user: updated_user,
-        }, {
+            updated: Date.timestampCurrent,
+            updated_user: updated_user
+        },{
             where: {
                 id: req.params.id
             }
