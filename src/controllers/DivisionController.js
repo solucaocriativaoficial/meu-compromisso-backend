@@ -43,7 +43,6 @@ module.exports = {
             name: name,
             abbreviation:abbreviation,
             created_at: Date.timestampCurrent(),
-            updated_at: Date.timestampCurrent(),
             created_user: created_user
         })
         .then(content => {
