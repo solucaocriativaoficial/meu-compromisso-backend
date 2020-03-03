@@ -18,25 +18,6 @@ module.exports = {
             error_handling.getError(error);
         })
     },
-    findOne(req, res){
-        Model.findAll({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(content => {
-            if(content.length){
-                res.json(content)
-            }
-            else{
-                res.json({ message: 'Nenhum registro encontrado', status: "ok" })
-            }
-        })
-        .catch(error => {
-            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
-            error_handling.getError(error);
-        })
-    },
     insert(req, res){
         const {
             name,
