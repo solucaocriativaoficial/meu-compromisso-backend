@@ -15,7 +15,6 @@ module.exports = {
             password_access: password_access,
             privileges_m: privileges_m,
             created_at: Date.timestampCurrent(),
-            updated_at: Date.timestampCurrent(),
         })
             .then(() => {
                 res.json({ message: "Acesso cadastrado com sucesso!", status: "ok" })

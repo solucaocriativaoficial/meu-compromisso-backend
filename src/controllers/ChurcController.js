@@ -63,7 +63,6 @@ module.exports = {
             country: country,
             district: district,
             created_at: Date.timestampCurrent(),
-            updated_at: Date.timestampCurrent(),
             created_user: created_user
         })
         .then(content => {

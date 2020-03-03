@@ -25,7 +25,6 @@ async function insertScale(body, Date)
         confirmed_by_member,
         scale_responsible,
         Date.timestampCurrent(),
-        Date.timestampCurrent(),
         created_user
     ];
 

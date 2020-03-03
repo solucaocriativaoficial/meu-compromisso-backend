@@ -35,14 +35,13 @@ module.exports = {
         } = req.body;
 
         const comand = {
-            text: "INSERT INTO currents_departments (department, member, member_role, year, churc, created_at, updated_at, created_user) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+            text: "INSERT INTO currents_departments (department, member, member_role, year, churc, created_at, created_user) VALUES ($1,$2,$3,$4,$5,$6,$7)",
             values:[
                 department,
                 member,
                 member_role,
                 year,
                 churc,
-                Date.timestampCurrent(),
                 Date.timestampCurrent(),
                 created_user
             ]
