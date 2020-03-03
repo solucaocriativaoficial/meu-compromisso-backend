@@ -38,11 +38,11 @@ module.exports = {
         })
     },
     insert(req, res){
-        const { name, association, shepherd, created_user } = req.body;
+        const { name, association, shepderd, created_user } = req.body;
         Model.create({
             name: name,
             association: association,
-            shepherd: shepherd,
+            shepderd: shepderd,
             created_at: Date.timestampCurrent(),
             updated_at: Date.timestampCurrent(),
             created_user: created_user
@@ -70,11 +70,11 @@ module.exports = {
         })
     },
     update(req, res){
-        const { name, association, shepherd, updated_user } = req.body;
+        const { name, association, shepderd, updated_user } = req.body;
         Model.update({
             name: name,
             association: association,
-            shepherd: shepherd,
+            shepderd: shepderd,
             updated_at: Date.timestampCurrent(),
             updated_user: updated_user,
         }, {

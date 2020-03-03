@@ -14,15 +14,19 @@ const District = settings_database.define('district', {
     },
     association:{
         type: Sequelize.INTEGER,
+        allowNull: false,
     },
     shepderd:{
         type: Sequelize.INTEGER,
+        allowNull: false,
     },
     created_at: {
         type: Sequelize.STRING(19),
+        allowNull: false,
     },
     updated_at: {
         type: Sequelize.STRING(19),
+        allowNull: false,
     },
     created_user:{
         type: Sequelize.INTEGER,
