@@ -29,6 +29,7 @@ module.exports = {
             department,
             member,
             member_role,
+            year,
             churc,
             created_user
         } = req.body;
@@ -39,7 +40,7 @@ module.exports = {
                 department,
                 member,
                 member_role,
-                Date.yearCurrent(),
+                year,
                 churc,
                 Date.timestampCurrent(),
                 Date.timestampCurrent(),
@@ -60,7 +61,7 @@ module.exports = {
     delete(req, res){
         Model.destroy({
             where: {
-                id: req.body.id
+                id: req.params.id
             }
         })
         .then(content => {
