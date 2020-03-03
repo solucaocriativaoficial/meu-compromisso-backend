@@ -34,6 +34,7 @@ select access.member, member.cpf, access.password_access, access.privileges_m fr
 CREATE TABLE division(
 id SERIAL PRIMARY KEY,
 name VARCHAR(255) NOT NULL UNIQUE,
+abbreviation VARCHAR(20),
 created_at VARCHAR(19) NOT NULL,
 updated_at VARCHAR(19) NOT NULL,
 created_user INT,
@@ -48,6 +49,7 @@ CONSTRAINT division_updated_user FOREIGN KEY(updated_user) REFERENCES member(id)
 CREATE TABLE unity(
 id SERIAL PRIMARY KEY,
 name VARCHAR(255) NOT NULL UNIQUE,
+abbreviation VARCHAR(20),
 division INT NOT NULL,
 created_at VARCHAR(19) NOT NULL,
 updated_at VARCHAR(19) NOT NULL,
@@ -64,6 +66,7 @@ CONSTRAINT unity_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON
 CREATE TABLE association(
 id SERIAL PRIMARY KEY,
 name VARCHAR(255) NOT NULL UNIQUE,
+abbreviation VARCHAR(20),
 unity INT NOT NULL,
 created_at VARCHAR(19) NOT NULL,
 updated_at VARCHAR(19) NOT NULL,

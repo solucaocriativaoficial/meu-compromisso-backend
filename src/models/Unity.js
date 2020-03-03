@@ -12,6 +12,9 @@ const Unity = settings_database.define('unity', {
         type: Sequelize.STRING(255),
         allowNull: false,
     },
+    abbreviation:{
+        type: Sequelize.STRING(20),
+    },
     division:{
         type: Sequelize.INTEGER,
     },

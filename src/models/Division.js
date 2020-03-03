@@ -12,6 +12,9 @@ const Division = settings_database.define('division', {
         type: Sequelize.STRING(255),
         allowNull: false,
     },
+    abbreviation:{
+        type: Sequelize.STRING(20),
+    },
     created_at: {
         type: Sequelize.STRING(19),
     },

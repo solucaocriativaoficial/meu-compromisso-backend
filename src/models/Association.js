@@ -12,6 +12,9 @@ const Association = settings_database.define('association', {
         type: Sequelize.STRING(255),
         allowNull: false,
     },
+    abbreviation:{
+        type: Sequelize.STRING(20),
+    },
     unity:{
         type: Sequelize.INTEGER,
     },
