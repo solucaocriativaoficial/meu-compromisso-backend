@@ -38,9 +38,10 @@ module.exports = {
         })
     },
     insert(req, res){
-        const { name, created_user } = req.body;
+        const { name, created_user, abbreviation } = req.body;
         Model.create({
             name: name,
+            abbreviation:abbreviation,
             created_at: Date.timestampCurrent(),
             updated_at: Date.timestampCurrent(),
             created_user: created_user
@@ -68,9 +69,10 @@ module.exports = {
         })
     },
     update(req, res){
-        const { name, updated_user } = req.body;
+        const { name, updated_user, abbreviation } = req.body;
         Model.update({
             name: name,
+            abbreviation:abbreviation,
             updated_at: Date.timestampCurrent(),
             updated_user: updated_user,
         }, {

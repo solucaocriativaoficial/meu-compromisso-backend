@@ -38,9 +38,10 @@ module.exports = {
         })
     },
     insert(req, res){
-        const { name, division, created_user } = req.body;
+        const { name, abbreviation, division, created_user } = req.body;
         Model.create({
             name: name,
+            abbreviation:abbreviation,
             division: division,
             created_at: Date.timestampCurrent(),
             created_user: created_user
@@ -68,9 +69,10 @@ module.exports = {
         })
     },
     update(req, res){
-        const { name, division, updated_user } = req.body;
+        const { name, abbreviation, division, updated_user } = req.body;
         Model.update({
             name: name,
+            abbreviation:abbreviation,
             division: division,
             updated_at: Date.timestampCurrent(),
             updated_user: updated_user,
