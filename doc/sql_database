@@ -7,37 +7,26 @@ SET CLIENT_ENCODING = 'UTF8';
 
 CREATE TABLE public.member
 (
-  id integer NOT NULL DEFAULT nextval('member_id_seq'::regclass),
+  id SERIAL PRIMARY KEY,
   complete_name character varying(255) NOT NULL,
-  cpf character varying(14) NOT NULL,
+  cpf character varying(14) NOT NULL UNIQUE,
   date_of_birth date NOT NULL,
   contact_phone character varying(14),
   mail character varying(255),
   image character varying(255),
-  zipcode character varying(9) NOT NULL DEFAULT '78310-000'::character varying,
+  zipcode character varying(9) NOT NULL DEFAULT '78310-000',
   address character varying(255) NOT NULL,
   neightborhood character varying(255),
   references_address character varying(100),
-  city character varying(255) NOT NULL DEFAULT 'Comodoro'::character varying,
-  state character varying(2) NOT NULL DEFAULT 'MT'::character varying,
-  country character varying(100) NOT NULL DEFAULT 'Brasil'::character varying,
+  city character varying(255) NOT NULL DEFAULT 'Comodoro',
+  state character varying(2) NOT NULL DEFAULT 'MT',
+  country character varying(100) NOT NULL DEFAULT 'Brasil',
   created_at character varying(19),
   updated_at character varying(19),
   created_user integer,
   updated_user integer,
-  churc integer,
-  CONSTRAINT member_pkey PRIMARY KEY (id),
-  CONSTRAINT churc_member FOREIGN KEY (churc)
-      REFERENCES public.churc (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE,
-  CONSTRAINT created_user_member FOREIGN KEY (created_user)
-      REFERENCES public.member (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE,
-  CONSTRAINT updated_user_member FOREIGN KEY (updated_user)
-      REFERENCES public.member (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE,
-  CONSTRAINT member_cpf_key UNIQUE (cpf)
-  )
+  churc integer
+  );
 
 /*
 -- Adicionando os relacionamentos de criação e alteração de membro
@@ -48,13 +37,13 @@ alter table member add constraint updated_user_member foreign key(updated_user) 
 /*
 -- Adicionando os relacionamentos de criação e alteração de membro
 */
-CREATE OR REPLACE TABLE access(
+CREATE TABLE access(
 id SERIAL PRIMARY KEY,
 member INT NOT NULL UNIQUE,
 password_access VARCHAR(255) NOT NULL,
 privileges_m VARCHAR(50) NOT NULL,
 created_at VARCHAR(19) NOT NULL,
-updated_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19),
 CONSTRAINT access_member FOREIGN KEY (member) REFERENCES member(id) ON DELETE CASCADE
 );
 
@@ -62,7 +51,7 @@ CONSTRAINT access_member FOREIGN KEY (member) REFERENCES member(id) ON DELETE CA
 * Criando a view de Login
 */
 create or replace view Login AS
-select access.member, member.cpf, access.password_access, access.privileges_m from member JOIN access on member.id = access.member
+select access.member, member.cpf, access.password_access, access.privileges_m from member JOIN access on member.id = access.member;
 
 /*
 * Criando a tabela "division" e seus relacionamentos
@@ -72,7 +61,7 @@ id SERIAL PRIMARY KEY,
 name VARCHAR(255) NOT NULL UNIQUE,
 abbreviation VARCHAR(20),
 created_at VARCHAR(19) NOT NULL,
-updated_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19),
 created_user INT,
 updated_user INT,
 CONSTRAINT division_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
@@ -88,7 +77,7 @@ name VARCHAR(255) NOT NULL UNIQUE,
 abbreviation VARCHAR(20),
 division INT NOT NULL,
 created_at VARCHAR(19) NOT NULL,
-updated_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19),
 created_user INT,
 updated_user INT,
 CONSTRAINT unity_division FOREIGN KEY(division) REFERENCES division(id) ON DELETE CASCADE,
@@ -105,7 +94,7 @@ name VARCHAR(255) NOT NULL UNIQUE,
 abbreviation VARCHAR(20),
 unity INT NOT NULL,
 created_at VARCHAR(19) NOT NULL,
-updated_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19),
 created_user INT,
 updated_user INT,
 CONSTRAINT association_unity FOREIGN KEY(unity) REFERENCES unity(id) ON DELETE CASCADE,
@@ -147,7 +136,7 @@ state VARCHAR(2) DEFAULT 'MT',
 country VARCHAR(255) DEFAULT 'Brasil',
 district INT NOT NULL,
 created_at VARCHAR(19) NOT NULL,
-updated_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19),
 created_user INT,
 updated_user INT,
 CONSTRAINT churc_district FOREIGN KEY(district) REFERENCES district(id) ON DELETE CASCADE,
@@ -168,7 +157,7 @@ CREATE TABLE department(
 id SERIAL PRIMARY KEY,
 name VARCHAR(255) NOT NULL UNIQUE,
 created_at VARCHAR(19) NOT NULL,
-updated_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19),
 created_user INT,
 updated_user INT,
 CONSTRAINT department_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,

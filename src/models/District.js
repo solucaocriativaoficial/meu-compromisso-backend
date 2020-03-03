@@ -26,7 +26,6 @@ const District = settings_database.define('district', {
     },
     updated_at: {
         type: Sequelize.STRING(19),
-        allowNull: false,
     },
     created_user:{
         type: Sequelize.INTEGER,
