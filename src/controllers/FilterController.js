@@ -41,11 +41,38 @@ module.exports = {
 
         doRequest(comand, res);
     },
+    search_unity(req, res){
+        const { filter } = req.body;
+
+        const comand = {
+            text: `SELECT * FROM unity WHERE name ILIKE $1`,
+            values: [`%${filter}%` ]
+        }
+        doRequest(comand, res);
+    },
     search_association(req, res){
         const { filter } = req.body;
 
         const comand = {
             text: `SELECT * FROM association WHERE name ILIKE $1`,
+            values: [`%${filter}%` ]
+        }
+        doRequest(comand, res);
+    },
+    search_district(req, res){
+        const { filter } = req.body;
+
+        const comand = {
+            text: `SELECT * FROM district WHERE name ILIKE $1`,
+            values: [`%${filter}%` ]
+        }
+        doRequest(comand, res);
+    },
+    search_churc(req, res){
+        const { filter } = req.body;
+
+        const comand = {
+            text: `SELECT * FROM churc WHERE churc_name ILIKE $1`,
             values: [`%${filter}%` ]
         }
         doRequest(comand, res);
