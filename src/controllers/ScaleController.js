@@ -1,4 +1,5 @@
-const Model = require('../models/Currents_departments');
+const Model = require('../models/Scale');
+const connection_pg = require('../config/connection_pg');
 const Date = require('../utils/Date');
 const error_handling = require('../utils/ErrorHandling');
 
@@ -11,6 +12,27 @@ module.exports = {
             }
             else{
                 res.json({ message: 'Nenhum registro encontrado', status: "ok" })
+            }
+        })
+        .catch(error => {
+            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
+            error_handling.getError(error);
+        })
+    },
+    myScale(req, res){
+       const comand = {
+           text: "SELECT * FROM myScale WHERE id_member=$1",
+           values:[req.params.id_member]
+       }
+       connection_pg
+       .query(comand)
+        .then(content => {
+            const { rowCount, rows } = content;
+            if(rowCount){
+                res.json(rows)
+            }
+            else{
+                res.json({ message: 'Nenhum registro encontrado!', status: "ok" })
             }
         })
         .catch(error => {
