@@ -2,6 +2,42 @@
 -- Mudando o encoding para utc
 */
 SET CLIENT_ENCODING = 'UTF8';
+/*
+* criando a tabela dos membros*/
+
+CREATE TABLE public.member
+(
+  id integer NOT NULL DEFAULT nextval('member_id_seq'::regclass),
+  complete_name character varying(255) NOT NULL,
+  cpf character varying(14) NOT NULL,
+  date_of_birth date NOT NULL,
+  contact_phone character varying(14),
+  mail character varying(255),
+  image character varying(255),
+  zipcode character varying(9) NOT NULL DEFAULT '78310-000'::character varying,
+  address character varying(255) NOT NULL,
+  neightborhood character varying(255),
+  references_address character varying(100),
+  city character varying(255) NOT NULL DEFAULT 'Comodoro'::character varying,
+  state character varying(2) NOT NULL DEFAULT 'MT'::character varying,
+  country character varying(100) NOT NULL DEFAULT 'Brasil'::character varying,
+  created_at character varying(19),
+  updated_at character varying(19),
+  created_user integer,
+  updated_user integer,
+  churc integer,
+  CONSTRAINT member_pkey PRIMARY KEY (id),
+  CONSTRAINT churc_member FOREIGN KEY (churc)
+      REFERENCES public.churc (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT created_user_member FOREIGN KEY (created_user)
+      REFERENCES public.member (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT updated_user_member FOREIGN KEY (updated_user)
+      REFERENCES public.member (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT member_cpf_key UNIQUE (cpf)
+  )
 
 /*
 -- Adicionando os relacionamentos de criação e alteração de membro
@@ -150,7 +186,7 @@ member_role VARCHAR(200) NOT NULL,
 year INT NOT NULL,
 churc INT NOT NULL,
 created_at VARCHAR(19) NOT NULL,
-updated_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19),
 created_user INT,
 updated_user INT,
 CONSTRAINT departament_department FOREIGN KEY(department) REFERENCES department(id) ON DELETE CASCADE,
@@ -174,7 +210,7 @@ scale_date DATE,
 confirmed_by_member VARCHAR(3) NOT NULL DEFAULT 'não',
 scale_responsible INT NOT NULL,
 created_at VARCHAR(19) NOT NULL,
-updated_at VARCHAR(19) NOT NULL,
+updated_at VARCHAR(19),
 created_user INT,
 updated_user INT,
 CONSTRAINT scale_churc FOREIGN KEY(churc) REFERENCES churc(id) ON DELETE CASCADE,
@@ -226,22 +262,36 @@ CONSTRAINT notification_scale FOREIGN KEY(scale) REFERENCES scale(id) ON DELETE 
 /*
 * Criando a view que ira mostrar todos os registros aonde o membro esta escalado
 */
-CREATE OR REPLACE VIEW myScale AS
+CREATE VIEW myScale_I AS
 SELECT
 scale.id,
 scale.scale_type,
 scale.churc AS id_churc,
 churc.name AS churc,
 scale.member AS id_member,
-scale.department AS id_deparment,
-department.name AS deparment,
+member.complete_name,
 scale.scale_date,
 scale.confirmed_by_member
  FROM scale
  JOIN churc on scale.churc = churc.id
- JOIN member on scale.member = member.id
- JOIN department on scale.department = department.id;
+ JOIN member on scale.member = member.id;
 
+/*
+* Criando a view que ira mostrar todos os registros aonde o departmento esta escalado
+*/
+CREATE VIEW myScale_Dep AS
+SELECT
+scale.id,
+scale.scale_type,
+scale.churc AS id_churc,
+churc.name AS churc,
+scale.department AS id_department,
+department.name AS department,
+scale.scale_date,
+scale.confirmed_by_member
+ FROM scale
+ JOIN churc on scale.churc = churc.id
+ JOIN department on scale.department = department.id;
 
 /*
 Criando a view dos departamentos do ano atual

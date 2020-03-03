@@ -85,6 +85,11 @@ router.put('/current_department/:id', Current_departmentsControlller.update)
 router.delete('/current_department/:id', Current_departmentsControlller.delete)
 
 //Escala
-router.get('/scale/:id_member', ScaleController.myScale)
+router.get('/scale/myscale_i/:id', ScaleController.myScale_I)
+router.get('/scale/myscale_dep/:id', ScaleController.myScale_Dep)
+router.get('/scale', ScaleController.findAll)
+router.post('/scale/add', ScaleController.insert)
+router.put('/scale/:id', ScaleController.update)
+router.delete('/scale/:id', ScaleController.delete)
 
 module.exports = router;
