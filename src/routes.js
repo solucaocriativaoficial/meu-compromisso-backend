@@ -4,7 +4,12 @@ const MemberController = require('./controllers/MemberController');
 const AccessController = require('./controllers/AccessController');
 const LoginController = require('./controllers/LoginController');
 const DivisionController = require('./controllers/DivisionController');
+const UnityController = require('./controllers/UnityController');
 const AssociationController = require('./controllers/AssociationController');
+const DistrictController = require('./controllers/DistrictController');
+const ChurcController = require('./controllers/ChurcController');
+const Current_departmentsControlller = require('./controllers/Current_departamentsController');
+const ScaleController = require('./controllers/ScaleController');
 const FilterController = require('./controllers/FilterController');
 
 // Member
@@ -35,6 +40,14 @@ router.post('/division/filter/', FilterController.search_division)
 router.put('/division/:id', DivisionController.update)
 router.delete('/division/:id', DivisionController.delete)
 
+//União
+router.get('/unity', UnityController.findAll)
+router.get('/unity/especific/:id', UnityController.findOne)
+router.post('/unity/add', UnityController.insert)
+router.post('/unity/filter/', FilterController.search_unity)
+router.put('/unity/:id', UnityController.update)
+router.delete('/unity/:id', UnityController.delete)
+
 //Association
 router.get('/association', AssociationController.findAll)
 router.get('/association/especific/:id', AssociationController.findOne)
@@ -42,4 +55,30 @@ router.post('/association/add', AssociationController.insert)
 router.post('/association/filter/', FilterController.search_association)
 router.put('/association/:id', AssociationController.update)
 router.delete('/association/:id', AssociationController.delete)
+
+//district
+router.get('/district', DistrictController.findAll)
+router.get('/district/especific/:id', DistrictController.findOne)
+router.post('/district/add', DistrictController.insert)
+router.post('/district/filter/', FilterController.search_district)
+router.put('/district/:id', DistrictController.update)
+router.delete('/district/:id', DistrictController.delete)
+
+//churc
+router.get('/churc', ChurcController.findAll)
+router.get('/churc/especific/:id', ChurcController.findOne)
+router.post('/churc/add', ChurcController.insert)
+router.post('/churc/filter/', FilterController.search_churc)
+router.put('/churc/:id', ChurcController.update)
+router.delete('/churc/:id', ChurcController.delete)
+
+//current department
+router.get('/current_department', Current_departmentsControlller.findAll)
+router.post('/current_department/add', Current_departmentsControlller.insert)
+router.put('/current_department/:id', Current_departmentsControlller.update)
+router.delete('/current_department/:id', Current_departmentsControlller.delete)
+
+//current department
+router.get('/scale/:id_member', ScaleController.myScale)
+
 module.exports = router;
