@@ -18,7 +18,7 @@ module.exports = {
                 res.json(rows)
             }
             else{
-                res.json({ message: 'CPF não cadastrado!', status: "ok" })
+                res.json({ message: 'CPF não cadastrado!', status: "not_authorized" })
             }
         })
         .catch(error => {
@@ -43,7 +43,7 @@ module.exports = {
                 res.json(rows)
             }
             else{
-                res.json({ message: 'Senha inválida!', status: "ok" })
+                res.json({ message: 'Senha inválida!', status: "not_authorized" })
             }
         })
         .catch(error => {
