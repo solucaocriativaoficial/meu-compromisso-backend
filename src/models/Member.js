@@ -22,7 +22,7 @@ const Member = settings_database.define('member', {
         allowNull: false,
     },
     contact_phone: {
-        type: Sequelize.STRING(14),
+        type: Sequelize.STRING(15),
         allowNull: true,
     },
     mail:{
