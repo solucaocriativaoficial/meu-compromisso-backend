@@ -30,7 +30,7 @@ router.post('/access/add', AccessController.insert)
 
 //Validation login
 router.post('/validation/cpf', LoginController.validation_cpf)
-router.post('/validation/password', LoginController.validation_password)
+router.post('/validation', LoginController.validation)
 
 
 //Division

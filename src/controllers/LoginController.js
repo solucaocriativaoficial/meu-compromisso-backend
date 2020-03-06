@@ -27,12 +27,12 @@ module.exports = {
             error_handling.getError(error);
         })
     },
-    validation_password(req, res){
-        const { member, password_access } = req.body;
+    validation(req, res){
+        const { cpf, password_access } = req.body;
 
         const comand = {
-            text: `SELECT member, cpf, privileges_m FROM Login WHERE member=$1 AND password_access=$2`,
-            values: [member, password_access]
+            text: `SELECT member, privileges_m FROM Login WHERE cpf=$1 AND password_access=$2`,
+            values: [cpf, password_access]
         }
 
         connection_pg
@@ -43,7 +43,7 @@ module.exports = {
                 res.json(rows)
             }
             else{
-                res.json({ message: 'Senha inválida!', status: "not_authorized" })
+                res.json({ message: 'CPF ou senha inválida!', status: "not_authorized" })
             }
         })
         .catch(error => {
