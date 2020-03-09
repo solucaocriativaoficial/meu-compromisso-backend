@@ -12,6 +12,7 @@ const DepartmentsController = require('./controllers/DepartmentsController');
 const Current_departmentsControlller = require('./controllers/Current_departamentsController');
 const ScaleController = require('./controllers/ScaleController');
 const FilterController = require('./controllers/FilterController');
+const CursoPregacaoController = require('./controllers/CursoPregacaoController');
 
 // Member
 router.get('/member', MemberController.timeline)
@@ -91,5 +92,11 @@ router.get('/scale', ScaleController.findAll)
 router.post('/scale/add', ScaleController.insert)
 router.put('/scale/:id', ScaleController.update)
 router.delete('/scale/:id', ScaleController.delete)
+
+//Curso de pregação
+router.get('/cursopregacao', CursoPregacaoController.findAll)
+router.post('/cursopregacao/add', CursoPregacaoController.insert)
+router.put('/cursopregacao/:id', CursoPregacaoController.update)
+router.delete('/cursopregacao/:id', CursoPregacaoController.delete)
 
 module.exports = router;
