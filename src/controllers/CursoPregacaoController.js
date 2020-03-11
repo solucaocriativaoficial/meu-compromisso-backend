@@ -38,16 +38,31 @@ module.exports = {
             complete_name,
             city
         } = req.body;
-        Model.create({
-            complete_name: complete_name,
-            city: city,
+        Model.findAll({
+            where:{
+                complete_name: complete_name,
+                city: city,
+            }
         })
-        .then(content => {
-            res.json({ message: 'Inscrição confirmada com com sucesso!', status: "ok" })
-        })
-        .catch(error => {
-            console.log(error)
-            res.json({ message: "Erro ao confirmar presença!", status: "erro", complete_erro: error})
+        .then(response => {
+            //verificando se existe registro
+            if(response.lenght)
+            {
+                res.json({message: "Pessoa ja esta inscrita!", status: "erro"})
+            }
+            else{
+                Model.create({
+                    complete_name: complete_name,
+                    city: city,
+                })
+                .then(content => {
+                    res.json({ message: 'Inscrição confirmada com com sucesso!', status: "ok" })
+                })
+                .catch(error => {
+                    console.log(error)
+                    res.json({ message: "Erro ao confirmar presença!", status: "erro", complete_erro: error})
+                })
+            }
         })
     },
     delete(req, res){

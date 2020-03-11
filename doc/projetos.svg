@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9195959"
-     inkscape:cx="-1119.2571"
-     inkscape:cy="153.52387"
+     inkscape:zoom="0.49497474"
+     inkscape:cx="-2174.6585"
+     inkscape:cy="-675.61343"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -39,10 +39,21 @@
      inkscape:window-maximized="1"
      units="px"
      showborder="false"
-     showguides="true"
+     showguides="false"
      inkscape:guide-bbox="true"
      inkscape:lockguides="false"
-     inkscape:snap-global="true" />
+     inkscape:snap-global="true">
+    <sodipodi:guide
+       position="-574.09493,-80.7154"
+       orientation="0,1"
+       id="guide946"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-556.45519,-159.29264"
+       orientation="0,1"
+       id="guide948"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -59,6 +70,13 @@
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <rect
+       style="opacity:1;fill:#666666;fill-opacity:1;stroke:#ffffff;stroke-width:3.70416665;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect981"
+       width="125.61668"
+       height="103.70058"
+       x="-662.82837"
+       y="410.32227" />
     <g
        transform="matrix(1.0057299,0,0,1.0057299,-419.78009,-147.73604)"
        id="g1272">
@@ -799,6 +817,100 @@
          d="m -295.93725,258.20075 -0.0227,0.41593 c 0,0 1.3458,0.62953 1.65812,0.78691 0.15953,0.0804 0.33535,0.30155 0.45407,0.66949"
          style="opacity:1;fill:none;fill-opacity:1;stroke:#007209;stroke-width:0.11185522;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
          sodipodi:nodetypes="cccc" />
+    </g>
+    <g
+       id="g975"
+       inkscape:export-filename="/home/solucaocriativa/Development/cursopregacao-frontend/src/assets/icon-location.png"
+       inkscape:export-xdpi="112"
+       inkscape:export-ydpi="112"
+       transform="matrix(0.77204325,0,0,0.77204325,-144.7538,104.87887)">
+      <path
+         inkscape:export-ydpi="112"
+         inkscape:export-xdpi="112"
+         inkscape:export-filename="/home/solucaocriativa/Development/cursopregacao-frontend/src/assets/icon-location.png"
+         sodipodi:nodetypes="cccccccc"
+         inkscape:connector-curvature="0"
+         id="circle939"
+         d="m -561.63912,436.48856 c -5.10892,0 -9.25053,4.1416 -9.25054,9.25053 0,2.08455 0.70441,4.10793 1.99853,5.74213 2.09579,2.29838 4.91506,5.08284 7.28967,7.49582 l 6.22352,-6.44059 c 0.3177,-0.36023 0.59641,-0.61042 0.92973,-0.99019 1.32998,-1.64348 2.05687,-3.69295 2.05963,-5.80717 -10e-6,-5.10893 -4.14161,-9.25053 -9.25054,-9.25053 z"
+         style="opacity:0.82599996;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.5433408;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <circle
+         inkscape:export-ydpi="112"
+         inkscape:export-xdpi="112"
+         inkscape:export-filename="/home/solucaocriativa/Development/cursopregacao-frontend/src/assets/icon-location.png"
+         style="opacity:0.82599996;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.0803386;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="circle944"
+         cx="-561.63916"
+         cy="445.73914"
+         r="5.4010277" />
+    </g>
+    <g
+       id="g969"
+       inkscape:export-filename="/home/solucaocriativa/Development/cursopregacao-frontend/src/assets/icon-calendar.png"
+       inkscape:export-xdpi="112"
+       inkscape:export-ydpi="112"
+       transform="matrix(0.22517024,0,0,0.22517024,-492.02122,356.48547)">
+      <rect
+         rx="0"
+         ry="8.5369024"
+         y="380.38809"
+         x="-632.35974"
+         height="75.904549"
+         width="75.904549"
+         id="rect930"
+         style="opacity:1;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:5.29166651;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         id="rect950"
+         transform="scale(0.26458333)"
+         d="m -2357.7559,1437.6875 c -17.875,0 -32.2656,14.3906 -32.2656,32.2656 v 47.0567 h 286.8828 v -47.0567 c 0,-17.875 -14.3886,-32.2656 -32.2636,-32.2656 z"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:5.95806694;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         inkscape:connector-curvature="0" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path956"
+         d="m -613.56698,423.95301 14.16529,17.37251 25.84128,-29.99902"
+         style="fill:none;stroke:#ffffff;stroke-width:5.29166651;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         ry="2.0519617"
+         y="372.54514"
+         x="-623.82294"
+         height="7.8430061"
+         width="7.8430061"
+         id="rect958"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8.78416634;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8.78416634;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect960"
+         width="7.8430061"
+         height="7.8430061"
+         x="-573.57629"
+         y="372.54514"
+         ry="2.0519617" />
+    </g>
+    <g
+       id="g979"
+       inkscape:export-filename="/home/solucaocriativa/Development/cursopregacao-frontend/src/assets/icon-hours.png"
+       inkscape:export-xdpi="112"
+       inkscape:export-ydpi="112"
+       transform="matrix(0.77204325,0,0,0.77204325,-144.7538,104.87887)">
+      <circle
+         inkscape:export-ydpi="112"
+         inkscape:export-xdpi="112"
+         inkscape:export-filename="/home/solucaocriativa/Development/cursopregacao-frontend/src/assets/icon-hours.png"
+         r="10.996614"
+         cy="447.82538"
+         cx="-591.90204"
+         id="path937"
+         style="opacity:0.82599996;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.5433408;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="112"
+         inkscape:export-xdpi="112"
+         inkscape:export-filename="/home/solucaocriativa/Development/cursopregacao-frontend/src/assets/icon-hours.png"
+         style="fill:none;stroke:#ffffff;stroke-width:1.5433408;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m -596.0137,444.5562 4.13138,5.06678 7.53673,-8.74937"
+         id="path962"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccc" />
     </g>
   </g>
 </svg>
