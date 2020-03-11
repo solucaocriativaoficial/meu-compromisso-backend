@@ -46,7 +46,7 @@ module.exports = {
         })
         .then(response => {
             //verificando se existe registro
-            if(response.lenght)
+            if(response.length)
             {
                 res.json({message: "Pessoa ja esta inscrita!", status: "erro"})
             }
