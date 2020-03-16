@@ -190,6 +190,7 @@ CONSTRAINT departament_updated_user FOREIGN KEY(updated_user) REFERENCES member(
 */
 CREATE TABLE scale(
 id SERIAL PRIMARY KEY,
+id_db int UNIQUE,
 scale_type VARCHAR(200) NOT NULL,
 churc INT NOT NULL,
 member INT,
@@ -204,7 +205,7 @@ created_user INT,
 updated_user INT,
 CONSTRAINT scale_churc FOREIGN KEY(churc) REFERENCES churc(id) ON DELETE CASCADE,
 CONSTRAINT scale_member FOREIGN KEY(member) REFERENCES member(id) ON DELETE CASCADE,
-CONSTRAINT scale_department FOREIGN KEY(department) REFERENCES department(id) ON DELETE CASCADE,
+CONSTRAINT scale_currents_department FOREIGN KEY(department) REFERENCES department(id) ON DELETE CASCADE,
 CONSTRAINT scale_responsible FOREIGN KEY(scale_responsible) REFERENCES member(id) ON DELETE CASCADE,
 CONSTRAINT scale_created_user FOREIGN KEY(created_user) REFERENCES member(id) ON DELETE CASCADE,
 CONSTRAINT scale_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON DELETE CASCADE
@@ -215,6 +216,7 @@ CONSTRAINT scale_updated_user FOREIGN KEY(updated_user) REFERENCES member(id) ON
 */
 CREATE TABLE confirmed_scale(
 id SERIAL PRIMARY KEY,
+id_db int UNIQUE,
 scale INT NOT NULL,
 theme_for_action VARCHAR(100),
 confirmation_date VARCHAR(19) NOT NULL,
@@ -228,6 +230,7 @@ CONSTRAINT scale_member FOREIGN KEY(confirmation_member) REFERENCES member(id) O
 */
 CREATE TABLE change_request(
 id SERIAL PRIMARY KEY,
+id_db int UNIQUE,
 scale INT NOT NULL,
 requested_member INT NOT NULL,
 requested_date DATE NOT NULL,
@@ -241,7 +244,8 @@ CONSTRAINT change_request_member FOREIGN KEY(requested_member) REFERENCES member
 * Criando a tabela "notificações" e seus relacionamentos
 */
 CREATE TABLE notification(
-id SERIAL PRIMARY KEY,
+id int unique not null,
+id_db int UNIQUE,
 scale INT NOT NULL,
 displayed_notification VARCHAR(19), /*Data que foi mostrado a notificação*/
 describe_notification VARCHAR(255),
@@ -288,8 +292,9 @@ Criando a view dos departamentos do ano atual
 CREATE VIEW view_current_department AS 
 SELECT
 currents_departments.id,
-department.name AS department,
-member.complete_name,
+department.name AS department_name,
+currents_departments.department,
+member.complete_name AS member,
 currents_departments.member_role,
 currents_departments.year,
 churc.name AS churc
