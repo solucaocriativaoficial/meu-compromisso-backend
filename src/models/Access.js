@@ -19,6 +19,12 @@ const Access = settings_database.define('access', {
         type: Sequelize.STRING(50),
         defaultValue: "normal"
     },
+    token_access: {
+        type: Sequelize.STRING(255),
+    },
+    token_expired: {
+        type: Sequelize.STRING(19),
+    },
     created_at: {
         type: Sequelize.STRING(19)
     },

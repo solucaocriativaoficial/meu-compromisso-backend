@@ -42,16 +42,24 @@ id SERIAL PRIMARY KEY,
 member INT NOT NULL UNIQUE,
 password_access VARCHAR(255) NOT NULL,
 privileges_m VARCHAR(50) NOT NULL,
+token_access VARCHAR(255),
+token_expired VARCHAR(19),
 created_at VARCHAR(19) NOT NULL,
 updated_at VARCHAR(19),
 CONSTRAINT access_member FOREIGN KEY (member) REFERENCES member(id) ON DELETE CASCADE
 );
-
 /*
-* Criando a view de Login
+* Criando a view de Auth
 */
-create or replace view Login AS
-select access.member, member.cpf, access.password_access, access.privileges_m from member JOIN access on member.id = access.member;
+create or replace view Auth AS
+select
+member.cpf,
+access.privileges_m,
+access.token_access,
+access.token_expired
+from member
+JOIN access on member.id = access.member;
+
 
 /*
 * Criando a tabela "division" e seus relacionamentos

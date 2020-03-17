@@ -16,6 +16,13 @@ module.exports = {
         const year = now.getFullYear();
         return `${year}-${month}-${day}`;
     },
+    date_hashexpired(){
+        const now = new Date();
+        const day = addZero(now.getDate());
+        const month = addZero(now.getMonth());
+        const year = now.getFullYear() + 1;
+        return `${year}-${month}-${day}`;
+    },
     yearCurrent(){
         const now = new Date();
         const year = now.getFullYear();

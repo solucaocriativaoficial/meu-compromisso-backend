@@ -2,7 +2,7 @@ const express = require('express');
 const router = express();
 const MemberController = require('./controllers/MemberController');
 const AccessController = require('./controllers/AccessController');
-const LoginController = require('./controllers/LoginController');
+const AuthController = require('./controllers/AuthController');
 const DivisionController = require('./controllers/DivisionController');
 const UnityController = require('./controllers/UnityController');
 const AssociationController = require('./controllers/AssociationController');
@@ -28,10 +28,7 @@ router.delete('/access/:id', AccessController.delete)
 router.put('/access/update-password', AccessController.update_password)
 router.put('/access/update-privileges', AccessController.update_privileges)
 router.post('/access/add', AccessController.insert)
-
-//Validation login
-router.post('/validation/cpf', LoginController.validation_cpf)
-router.post('/validation', LoginController.validation)
+router.post('/auth', AuthController.auth)
 
 
 //Division

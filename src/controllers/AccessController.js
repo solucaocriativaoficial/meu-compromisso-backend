@@ -1,6 +1,7 @@
 const Model = require('../models/Access');
 const Date = require('../utils/Date');
 const error_handling = require('../utils/ErrorHandling');
+const bcrypt = require('bcrypt');
 
 module.exports = {
     insert(req, res) {
@@ -9,20 +10,25 @@ module.exports = {
             password_access,
             privileges_m
         } = req.body;
+        const hashpassword = bcrypt.hashSync(password_access, 10)
+        const token_access = bcrypt.hashSync(password_access, 15)
 
         Model.create({
             member: member,
-            password_access: password_access,
+            password_access: hashpassword,
             privileges_m: privileges_m,
-            created_at: Date.timestampCurrent(),
+            token_access: token_access,
+            token_expired: Date.date_hashexpired(),
+            created_at: Date.timestampCurrent()
         })
-            .then(() => {
-                res.json({ message: "Acesso cadastrado com sucesso!", status: "ok" })
-            })
-            .catch(error => {
-                res.json({ message: "Erro ao cadastrar acesso!", status: "erro", complete_erro: error});
-                error_handling.getError(error);
-            })
+        .then(content => {
+            console.log(content)
+            res.status(200).json({ message: "Acesso cadastrado com sucesso!", hash: hash_access})
+        })
+        .catch(error => {
+            error_handling.getError(error);
+            res.status(401).json({ message: "Erro ao cadastrar acesso!"});
+        })
     },
     delete(req, res) {
         Model.destroy({
