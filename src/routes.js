@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express();
 const MemberController = require('./controllers/MemberController');
-const AccessController = require('./controllers/AccessController');
 const AuthController = require('./controllers/AuthController');
 const DivisionController = require('./controllers/DivisionController');
 const UnityController = require('./controllers/UnityController');
@@ -23,11 +22,11 @@ router.post('/member/add', MemberController.insert)
 router.put('/member/profile/:id', MemberController.update)
 router.delete('/member/:id', MemberController.delete)
 
-// Access
-router.delete('/access/:id', AccessController.delete)
-router.put('/access/update-password', AccessController.update_password)
-router.put('/access/update-privileges', AccessController.update_privileges)
-router.post('/access/add', AccessController.insert)
+// Auth
+router.delete('/auth/:id', AuthController.delete)
+router.put('/auth/update-password', AuthController.update_password)
+router.put('/auth/update-privileges', AuthController.update_privileges)
+router.post('/auth/add', AuthController.insert)
 router.post('/auth', AuthController.auth)
 
 
