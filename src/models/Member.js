@@ -1,82 +1,39 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
-
-const Member = settings_database.define('member', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
+const MemberSchema = new Schema({
     complete_name: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true,
     },
     cpf: {
-        type: Sequelize.STRING(14),
-        allowNull: false,
+        type: String,
+        required: true,
         unique: true,
     },
-    date_of_birth:{
-        type: Sequelize.DATEONLY,
-        allowNull: false,
+    date_of_birth: {
+        type: Date,
+        required: true,
     },
-    contact_phone: {
-        type: Sequelize.STRING(15),
-        allowNull: true,
+    contact_phone: String,
+    mail: String,
+    image: String,
+    complete_address: {
+        type: Map,
     },
-    mail:{
-        type: Sequelize.STRING,
-        allowNull: true,
+    created_at:{
+        type: Date,
+        required: true,
     },
-    image:{
-        type: Sequelize.STRING(255),
+    modification_at: {
+        type: Date,
+        default: Date.now,
+        required: true,
     },
-    zipcode:{
-        type: Sequelize.STRING(9),
-        allowNull: false,
-        defaultValue: '78310-000',
-    },
-    address:{
-        type: Sequelize.STRING(255),
-        allowNull: false,
-    },
-    neightborhood:{
-        type: Sequelize.STRING(255),
-        allowNull: true
-    },
-    references_address: {
-        type: Sequelize.STRING(100),
-        allowNull: true
-    },
-    city:{
-        type: Sequelize.STRING(255),
-        defaultValue: 'Comodoro',
-        allowNull: false,
-    },
-    state:{
-        type: Sequelize.STRING(2),
-        defaultValue: 'MT',
-        allowNull: false,
-    },
-    country:{
-        type: Sequelize.STRING(100),
-        defaultValue: 'Brasil',
-        allowNull: false,
-    },
-    created_at: {
-        type: Sequelize.STRING(19),
-    },
-    updated_at: {
-        type: Sequelize.STRING(19),
-    },
-    created_user:{
-        type: Sequelize.INTEGER,
-    },
-    updated_user: {
-        type: Sequelize.INTEGER,
+    modification_user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member",
     }
-},configTableGeral)
-
-//Member.sync({force: true});
-module.exports = Member;
+}, {
+    collection: 'member'
+})
+module.exports = mongoose.model('Member', MemberSchema);

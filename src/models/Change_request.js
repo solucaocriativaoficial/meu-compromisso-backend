@@ -1,28 +1,13 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
+const Change_requestSchema = new Schema({
+    scale: Number,
+    requested_member: Number,
+    requested_date: Date,
+    status_requisition: String,
+    accept_date: Date,
+}, {
+    collection: 'change_request'
+})
 
-const Change_request = settings_database.define('change_request', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    scale: {
-        type: Sequelize.INTEGER,
-    },
-    requested_member: {
-        type: Sequelize.INTEGER,
-    },
-    requested_date: {
-        type: Sequelize.DATEONLY,
-    },
-    status_requisition:{
-        type: Sequelize.STRING(7),
-    },
-    accept_date: {
-        type: Sequelize.DATEONLY,
-    }
-}, configTableGeral)
-
-module.exports = Change_request;
+module.exports = mongoose.Model('Change_request', Change_requestSchema);

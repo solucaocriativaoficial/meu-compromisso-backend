@@ -1,35 +1,15 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
+const Association = new Schema({
+    name: String,
+    abbreviation: String,
+    unity: Number,
+    created_at: Date,
+    updated_at: Date,
+    created_user: String,
+    updated_user: String,
+}, {
+    collection: 'association'
+})
 
-const Association = settings_database.define('association', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-    },
-    abbreviation:{
-        type: Sequelize.STRING(20),
-    },
-    unity:{
-        type: Sequelize.INTEGER,
-    },
-    created_at: {
-        type: Sequelize.STRING(19),
-    },
-    updated_at: {
-        type: Sequelize.STRING(19),
-    },
-    created_user:{
-        type: Sequelize.INTEGER,
-    },
-    updated_user: {
-        type: Sequelize.INTEGER,
-    }
-}, configTableGeral)
-
-module.exports = Association;
+module.exports = mongoose.Model('Association', Association);

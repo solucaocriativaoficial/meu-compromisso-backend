@@ -1,4 +1,4 @@
-const Model = require('../models/Access');
+const Model = require('../models/Auth');
 const connection_pg = require('../config/connection_pg')
 const bcrypt = require('bcrypt')
 const Date = require('../utils/Date');
