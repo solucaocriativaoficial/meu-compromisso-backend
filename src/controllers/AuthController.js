@@ -121,8 +121,10 @@ module.exports = {
             })
         })
     },
-    update(req, res){
-        ModelMember.findById(req.params.id, "_id", (err, content) =>{
+    update_password(req, res){
+        ModelMember.findOne({
+            _id: req.body.member
+        }, "_id", (err, content) =>{
             if(err)
             res.status(404).json({
                 success: false,
