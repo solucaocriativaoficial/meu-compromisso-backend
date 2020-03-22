@@ -1,13 +1,15 @@
-const Mongoose = require('mongoose');
+const Mongoose = require('mongoose')
+const ErroHandling = require('../utils/ErrorHandling')
+
 try {
-    Mongoose.connect(process.env.DATABASE_URL_MONGO,
-    {
+    Mongoose.connect(process.env.DATABASE_URL_MONGO,{
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    Mongoose.set('useCreateIndex', true);
-} catch (err) {
-    console.log('Erro ao conectar com o banco de dados', err)
+} catch (error) {
+    ErroHandling(error)
 }
+
+Mongoose.set('useCreateIndex', true);
 
 module.exports = Mongoose;
