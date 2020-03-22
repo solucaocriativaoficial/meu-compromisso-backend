@@ -1,5 +1,7 @@
 module.exports = {
-    getError(complete_error){
-        console.log(complete_error)
+    getError(error){
+        if(error === "Authenticate server")
+        console.log("Preciso enviar um e-mail para mim")
+        
     }
 }

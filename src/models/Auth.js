@@ -13,13 +13,6 @@ const AuthSchema = new Schema({
         type: String,
         required: true,
     },
-    token_access: {
-        type: String,
-    },
-    token_expired: {
-        type: String,
-        required: true,
-    },
     created_at: {
         type: Date,        
         required: true,
@@ -29,10 +22,14 @@ const AuthSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    created_user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member"
+    },
     modification_user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Member"
-    }
+    },
 },{
     collection: 'authentication'
 })
