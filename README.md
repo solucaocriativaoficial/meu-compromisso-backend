@@ -1,8 +1,12 @@
 # Objetivos
 ## Controller
-[] trocar os then pelo async await
 [#] Member
 [] Auth
+-[#] authentication
+-[#] insert
+-[#] fogolt
+-[#] trocar função
+-[] token
 [] Division
 [] Unition
 [] Association
