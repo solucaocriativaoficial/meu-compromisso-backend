@@ -20,10 +20,12 @@ const DivisionSchema = new Schema({
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
         required: true,
     },
     updated_user: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
     }
 }, {
     collection: "division"
