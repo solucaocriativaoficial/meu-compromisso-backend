@@ -1,66 +1,65 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
 
-const Churc = settings_database.define('churc', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+const ChurcSchema = new Schema({
     name: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
+        type: String,
+        required: true,
     },
     front_image: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+        type: String,
     },
     zipcode: {
-        type: Sequelize.STRING(9),
-        allowNull: false,
+        type: Number,
+        required: true,
     },
     address: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
+        type: String,
+        required: true,
     },
     neightborhood: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+        type: String,
     },
     references_address: {
-        type: Sequelize.STRING(100),
+        type: String,
     },
     city: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-        defaultValue: 'Comodoro',
+        type: String,
+        default: 'Comodoro',
+        required: true,
     },
     state: {
-        type: Sequelize.STRING(2),
-        defaultValue: 'MT',
-        allowNull: false,
+        type: String,
+        default: 'MT',
+        required: true,
     },
     country: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-        defaultValue: 'Brasil'
+        type: String,
+        default: 'Brasil',
+        required: true,
     },
     district:{
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'District',
+        required: true,
     },
     created_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
     },
     updated_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
+        default: Date.now,
     },
     created_user:{
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member'
     },
     updated_user: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member'
     }
-}, configTableGeral)
+}, {
+    collection: 'churc'
+})
 
-module.exports = Churc;
+module.exports = mongoose.model('Churc', ChurcSchema);

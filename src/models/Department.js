@@ -1,29 +1,31 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
 
-const Department = settings_database.define('department', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+const DepartmentSchema = new Schema({
     name: {
-        type: Sequelize.STRING(255),
-        allowNull: false
+        type: String,
+        unique: true,
+        required: true,
     },
     created_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
+        required: true,
     },
     updated_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
+        default: Date.now,
     },
     created_user:{
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
+        required: true,
     },
     updated_user: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
     }
-}, configTableGeral)
+}, {
+    collection: "department"
+})
 
-module.exports = Department;
+module.exports = mongoose.model('Department', DepartmentSchema);
