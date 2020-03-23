@@ -145,7 +145,7 @@ module.exports = {
             if(content.nModified)
             res.status(200).json({
                 success: true,
-                content: content
+                message: "Registro atualizado com sucesso!"
             })
 
             res.status(200).json({

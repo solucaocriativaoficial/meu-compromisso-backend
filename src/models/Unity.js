@@ -1,35 +1,38 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
 
-const Unity = settings_database.define('unity', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+const UnitySchema = new Schema({
     name: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
+        type: String,
+        unique: true,
+        required: true,
     },
     abbreviation:{
-        type: Sequelize.STRING(20),
+        type: String,
     },
-    division:{
-        type: Sequelize.INTEGER,
+    division: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Division'
     },
     created_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
+        required: true,
     },
     updated_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
+        default: Date.now,
     },
     created_user:{
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
+        required: true,
     },
     updated_user: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
     }
-}, configTableGeral)
+}, {
+    collection: "unity"
+})
 
-module.exports = Unity;
+module.exports = mongoose.model('Unity', UnitySchema);
