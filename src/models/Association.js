@@ -1,15 +1,38 @@
 const mongoose = require('../config/connection_database');
 const Schema = mongoose.Schema;
-const Association = new Schema({
-    name: String,
-    abbreviation: String,
-    unity: Number,
-    created_at: Date,
-    updated_at: Date,
-    created_user: String,
-    updated_user: String,
+
+const AssociationSchema = new Schema({
+    name: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    abbreviation:{
+        type: String,
+    },
+    unity: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Unity'
+    },
+    created_at: {
+        type: Date,
+        required: true,
+    },
+    updated_at: {
+        type: Date,
+        default: Date.now,
+    },
+    created_user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
+        required: true,
+    },
+    updated_user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
+    }
 }, {
-    collection: 'association'
+    collection: "association"
 })
 
-module.exports = mongoose.Model('Association', Association);
+module.exports = mongoose.model('Association', AssociationSchema);

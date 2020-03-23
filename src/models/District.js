@@ -1,38 +1,40 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
 
-const District = settings_database.define('district', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+const DistrictSchema = new Schema({
     name: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
+        type: String,
+        unique: true,
+        required: true,
     },
-    association:{
-        type: Sequelize.INTEGER,
-        allowNull: false,
+    association: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Association'
     },
-    shepderd:{
-        type: Sequelize.INTEGER,
-        allowNull: false,
+    shepherd:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member",
+        required: true,
     },
     created_at: {
-        type: Sequelize.STRING(19),
-        allowNull: false,
+        type: Date,
+        required: true,
     },
     updated_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
+        default: Date.now,
     },
     created_user:{
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
+        required: true,
     },
     updated_user: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
     }
-}, configTableGeral)
+}, {
+    collection: "district"
+})
 
-module.exports = District;
+module.exports = mongoose.model('District', DistrictSchema);
