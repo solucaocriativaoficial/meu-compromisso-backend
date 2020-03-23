@@ -68,7 +68,7 @@ module.exports = {
             error_handling.getError(error);
             res.status(401).json({
                 success: false,
-                message: "Erro ao procurar o nome dessa associação!"
+                message: "Erro ao verificar existência desse nome!"
             })
         }
 
@@ -103,7 +103,7 @@ module.exports = {
             if(!ifExistsRegister)
             res.status(401).json({
                 success: false,
-                message: "Não existe este código de associação!"
+                message: "Código deste registro não foi encontrado!"
             })
 
             try{
