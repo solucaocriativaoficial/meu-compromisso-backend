@@ -1,90 +1,165 @@
 const Model = require('../models/Division');
-const Date = require('../utils/Date');
+const MyDate = require('../utils/MyDate');
 const error_handling = require('../utils/ErrorHandling');
 
 module.exports = {
-    findAll(req, res){
-        Model.findAll()
-        .then(content => {
-            if(content.length){
-                res.json(content)
-            }
-            else{
-                res.json({ message: 'Nenhum registro encontrado', status: "ok" })
-            }
+    async findAll(req, res){
+        const content = await Model.find();
+        if(content.length)
+        res.status(200).json({
+            success: true,
+            content: content
         })
-        .catch(error => {
-            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error})
-            error_handling.getError(error);
+        
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
         })
     },
-    findOne(req, res){
-        Model.findAll({
-            where: {
-                id: req.params.id
-            }
+    async filter(req, res){
+        const query = req.query.find
+        const search = new RegExp(query, "i")
+
+        const content = await Model.find({name: search})
+        
+        if(content.length)
+        res.status(200).json({
+            success: true,
+            content: content
         })
-        .then(content => {
-            if(content.length){
-                res.json(content)
-            }
-            else{
-                res.json({ message: 'Nenhum registro encontrado', status: "ok" })
-            }
+
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
         })
-        .catch(error => {
-            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error})
-            error_handling.getError(error);
-        })
+            
     },
-    insert(req, res){
-        const { name, created_user, abbreviation } = req.body;
-        Model.create({
-            name: name,
-            abbreviation:abbreviation,
-            created_at: Date.timestampCurrent(),
-            created_user: created_user
-        })
-        .then(content => {
-            res.json({ message: 'Divisão cadastrada com sucesso!', status: "ok" })
-        })
-        .catch(error => {
-            res.json({ message: "Erro ao cadastrar divisão!", status: "erro", complete_erro: error})
+    async findOne(req, res){
+        try {
+            const content = await Model.findById(req.params.id)
+            if(content)
+            res.status(200).json({
+                success: true,
+                content: content
+            })
+
+            res.status(200).json({
+                success: false,
+                message: 'Nenhum registro encontrado'
+            })
+        } catch(error) {
             error_handling.getError(error);
-        })
+            res.status(400).json({
+                success: false,
+                message: "Erro ao fazer busca!"
+            })
+        }
     },
-    delete(req, res){
-        Model.destroy({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(content => {
-            res.json({ message: 'Divisão deletada com sucesso!', status: "ok" })
-        })
-        .catch(error => {
-            res.json({ message: "Erro ao deletar divisão!", status: "erro", complete_erro: error})
+    async insert(req, res){
+        const query = req.query.find
+        try {
+            const content = await Model.find({name: /query/i})
+            if(content.length)
+            res.status(401).json({
+                success: true,
+                message: "Este nome já esta sendo usado por uma divisão!"
+            })
+        } catch (error) {
             error_handling.getError(error);
+            res.status(401).json({
+                success: false,
+                message: "Erro ao procurar o nome dessa associação!"
+            })
+        }
+
+        const join_data = Object.assign(req.body, {
+            created_at: MyDate.timestampCurrent()
         })
+        try {
+            const content = await Model.create(join_data)
+            if(content)
+            res.status(200).json({
+                success: true,
+                message: "Cadastro realizado com sucesso"
+            })
+
+            res.status(200).json({
+                success: false,
+                message: 'Não foi possível cadastrar!'
+            })
+                        
+        } catch (error) {
+            error_handling.getError(error);
+            if(error.code === 11000)
+            res.status(401).json({
+                success: false,
+                message: "Já existe uma divisão cadastrada com esse nome!"
+            })
+            res.status(400).json({
+                success: false,
+                message: "Erro em adicionar um novo registro!"
+            })
+        }
     },
-    update(req, res){
-        const { name, updated_user, abbreviation } = req.body;
-        Model.update({
-            name: name,
-            abbreviation:abbreviation,
-            updated_at: Date.timestampCurrent(),
-            updated_user: updated_user,
-        }, {
-            where: {
-                id: req.params.id
+    async delete(req, res){
+        try {
+            const ifExistsRegister = await Model.findById(req.params.id)
+
+            if(!ifExistsRegister)
+            res.status(401).json({
+                success: false,
+                message: "Não existe este código de associação!"
+            })
+
+            try{
+                const content_delete = await Model.deleteOne({_id: req.params.id})
+                if(content_delete)
+                res.status(200).json({
+                    success: true,
+                    message: "Registro deletado com sucesso!"
+                })                
+
+                res.status(400).json({
+                    success: false,
+                    message: "Registro não foi deletado!"
+                })
             }
-        })
-        .then(content => {
-            res.json({ message: 'Divisão atualizada com sucesso!', status: "ok" })
-        })
-        .catch(error => {
-            res.json({ message: "Erro ao atualizar divisão!", status: "erro", complete_erro: error})
+            catch(error) {
+                error_handling.getError(error);
+                res.status(400).json({
+                    success: false,
+                    message: "Erro ao deletar registro!"
+                })
+            }
+        } catch(error) {
             error_handling.getError(error);
-        })
+            res.status(400).json({
+                success: false,
+                message: "Erro ao verificar existencia do registro!"
+            })
+        }
+    },
+    async update(req, res){
+        try {
+            const content = await Model.updateOne({_id: req.params.id}, req.body)
+            if(content.nModified)
+            res.status(200).json({
+                success: true,
+                content: content
+            })
+
+            res.status(200).json({
+                success: false,
+                message: 'Não foi possível cadastrar!'
+            })
+        } catch(error) {
+            console.log(error)
+            error_handling.getError(error);
+            res.status(400).json({
+                success: false,
+                message: "Erro grave!"
+            })
+        }
+        
     }
 }
