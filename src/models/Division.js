@@ -1,32 +1,32 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
 
-const Division = settings_database.define('division', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+const DivisionSchema = new Schema({
     name: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
+        type: String,
+        unique: true,
+        required: true,
     },
     abbreviation:{
-        type: Sequelize.STRING(20),
+        type: String,
     },
     created_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
+        required: true,
     },
     updated_at: {
-        type: Sequelize.STRING(19),
+        type: Date,
+        default: Date.now,
     },
     created_user:{
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
     },
     updated_user: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
     }
-}, configTableGeral)
+}, {
+    collection: "division"
+})
 
-module.exports = Division;
+module.exports = mongoose.model('Division', DivisionSchema);
