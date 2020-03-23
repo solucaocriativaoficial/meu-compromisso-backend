@@ -5,50 +5,36 @@ const MyDate = require('../utils/MyDate');
 const error_handling = require('../utils/ErrorHandling');
 
 module.exports = {
-    auth(req, res){
+    async auth(req, res){
         const {cpf} = req.body
 
-        ModelMember.findOne({cpf: cpf},["_id"], (err, content) => {
-            if(err)
-            res.status(401).json({
-                success: false,
-                message: "Problemas na autenticação!"
-            })
+        const content = await ModelMember.findOne({cpf: cpf},["_id"])
 
-            if(!content)
-            res.status(401).json({
-                success: false,
-                message: "CPF não encontrado!"
-            })
+        if(!content)
+        res.status(401).json({
+            success: false,
+            message: "CPF não encontrado!"
+        })
 
-            const {_id} = content
+        const {_id} = content
 
-            Model.findOne({member: _id}, ["password"], (err_auth, content_auth) =>{
-                if(err_auth)
-                res.status(401).json({
-                    success: false,
-                    message: "Problemas na autenticação!"
-                })
+        const content_auth = await Model.findOne({member: _id}, ["password"])
+        if(content_auth === null)
+        res.status(401).json({
+            success: false,
+            message: "Usuário sem acesso! Por favor, faça seu cadastro!"
+        })
 
-                if(content_auth === null)
-                res.status(401).json({
-                    success: false,
-                    message: "Usuário sem acesso! Por favor, faça seu cadastro!"
-                })
+        const check_password = bcrypt.compareSync(req.body.password, content_auth.password)
+        if(!check_password)
+        res.status(401).json({
+            success: false,
+            message: "Senha inválida!"
+        })
 
-                const check_password = bcrypt.compareSync(req.body.password, content_auth.password)
-                if(!check_password)
-                res.status(401).json({
-                    success: false,
-                    message: "Senha inválida!"
-                })
-
-                res.status(200).json({
-                    success: true,
-                    content: content._id
-                })
-            })
-
+        res.status(200).json({
+            success: true,
+            content: content._id
         })
     },
     async insert(req, res){
@@ -121,9 +107,9 @@ module.exports = {
             })
         })
     },
-    update_password(req, res){
+    forgot_password(req, res){
         ModelMember.findOne({
-            _id: req.body.member
+            cpf: req.body.cpf
         }, "_id", (err, content) =>{
             if(err)
             res.status(404).json({

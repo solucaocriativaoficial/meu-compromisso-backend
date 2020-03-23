@@ -14,9 +14,9 @@ router.delete('/member/:id', MemberController.delete)
 
 // Auth
 router.delete('/auth/:id', AuthController.delete)
-router.put('/auth/update-password', AuthController.update_password)
-router.put('/auth/update-privileges', AuthController.update_privileges)
+//router.put('/auth/update-privileges', AuthController.update_privileges)
 router.post('/auth/add', AuthController.insert)
 router.post('/auth', AuthController.auth)
+router.put('/forgot_password', AuthController.forgot_password)
 
 module.exports = router;

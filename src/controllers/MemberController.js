@@ -4,55 +4,59 @@ const error_handling = require('../utils/ErrorHandling');
 const ValidationFields = require('../utils/ValidationFields')
 
 module.exports = {
-    findAll(req, res){
-        Model.find()
-        .then(content => {
-            if(content.length){
-                res.status(200).json(content)
-            }
-            else{
-                res.status(200).json({ message: 'Nenhum registro encontrado', status: "ok" })
-            }
+    async findAll(req, res){
+        const content = await Model.find();
+        if(content.length)
+        res.status(200).json({
+            success: true,
+            content: content
         })
-        .catch(error => {
-            error_handling.getError(error);
-            res.status(400).json({ message: "Erro na consulta!", status: "erro", complete_erro: error})
+        
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
         })
     },
-    filter(req, res){
+    async filter(req, res){
         const query = req.query.find
         const search = new RegExp(query, "i")
-        Model.find({
-            complete_name: search,
-        }, (err, content) =>{
 
-            if(err){
-                error_handling.getError(err);
-                res.status(400).json({message: "Erro na consulta!"});
-            }
+        const content = await Model.find({complete_name: search})
+        
+        if(content.length)
+        res.status(200).json({
+            success: true,
+            content: content
+        })
+
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
+        })
             
-            if(!content.length)
-            res.status(200).json({ message: 'Nenhum registro encontrado'})
-
-            res.status(200).json(content)
-        })
     },
-    findOne(req, res){
-        Model.findById(req.params.id, (err, content) => {
-            if(err){
-                error_handling.getError(err);
-                res.status(400).json({ message: "Erro na consulta!"})
-            }
+    async findOne(req, res){
+        try {
+            const content = await Model.findById(req.params.id)
+            if(content)
+            res.status(200).json({
+                success: true,
+                content: content
+            })
 
-            if(content){
-                res.status(200).json(content)
-            }
-            else{
-                res.status(204).json({ message: 'Nenhum registro encontrado'})
-            }
-        })
+            res.status(200).json({
+                success: false,
+                message: 'Nenhum registro encontrado'
+            })
+        } catch(error) {
+            error_handling.getError(error);
+            res.status(400).json({
+                success: false,
+                message: "Erro ao fazer busca!"
+            })
+        }
     },
-    insert(req, res){
+    async insert(req, res){
         const {
             complete_name,
             cpf,
@@ -63,39 +67,42 @@ module.exports = {
             created_user
         } = req.body;
 
-        Model.findOne({
-            cpf: cpf
-        }, async (err, content) => {
+        const check_cpf = await Model.findOne({cpf: cpf})
             
-            if(content)
-            res.status(200).json({message: "Este CPF já está cadastrado!"})
+        if(check_cpf)
+        res.status(200).json({message: "Este CPF já está cadastrado!"})
 
-            //validations
-            if(!ValidationFields.date_of_birth(date_of_birth))
-            res.status(204).json({message: "Data de nascimento inválida!"})
+        //validations
+        if(!ValidationFields.date_of_birth(date_of_birth))
+        res.status(204).json({message: "Data de nascimento inválida!"})
 
-            if(!ValidationFields.cpf(cpf))
-            res.status(204).json({message: "CPF inválido!"})
+        if(!ValidationFields.cpf(cpf))
+        res.status(204).json({message: "CPF inválido!"})
 
-            if(!ValidationFields.mail(mail))
-            res.status(204).json({message: "E-Mail inválido!"})
+        if(!ValidationFields.mail(mail))
+        res.status(204).json({message: "E-Mail inválido!"})
 
-            Model.create({
-                complete_name: complete_name,
-                cpf: cpf,
-                date_of_birth: date_of_birth,
-                contact_phone: contact_phone,
-                mail: mail,
-                complete_address: complete_address,
-                created_at: MyDate.timestampCurrent(),
-                created_user: created_user
+        Model.create({
+            complete_name: complete_name,
+            cpf: cpf,
+            date_of_birth: date_of_birth,
+            contact_phone: contact_phone,
+            mail: mail,
+            complete_address: complete_address,
+            created_at: MyDate.timestampCurrent(),
+            created_user: created_user
+        })
+        .then(content => {
+            res.status(200).json({
+                success: true,
+                message: 'Cadastro realizado com sucesso!'
             })
-            .then(content => {
-                res.status(200).json({ message: 'Cadastro realizado com sucesso!', status: "ok" })
-            })
-            .catch(error => {
-                error_handling.getError(error);
-                res.status(400).json({ message: "Erro ao cadastrar!", status: "erro", complete_erro: error})
+        })
+        .catch(error => {
+            error_handling.getError(error);
+            res.status(400).json({
+                success: false,
+                message: "Erro ao cadastrar!"
             })
         })
     },
@@ -111,33 +118,27 @@ module.exports = {
             res.status(400).json({ message: "Erro ao deletar", status: "erro", complete_erro: error })
         })
     },
-    update(req, res){
-        Model.findById(req.params.id, "_id", (err, content) =>{
-            if(!content)
-            res.status(400).json({message: "Registro inexistente!"})
+    async update(req, res){
+        const { cpf, date_of_birth, mail} = req.body;
 
-            const { cpf, date_of_birth, mail} = req.body;
-            //validations
-            if(date_of_birth !== undefined && !ValidationFields.date_of_birth(date_of_birth))
-            res.status(400).json({message: "Data de nascimento inválida!"})
+        const content_find = await Model.findById(req.params.id, "_id")
+        if(!content_find)
+        res.status(400).json({message: "Registro inexistente!"})
 
-            if(cpf !== undefined && !ValidationFields.cpf(cpf))
-            res.status(400).json({message: "CPF inválido!"})
+        //validations
+        if(date_of_birth !== undefined && !ValidationFields.date_of_birth(date_of_birth))
+        res.status(400).json({message: "Data de nascimento inválida!"})
 
-            if(mail !== undefined && !ValidationFields.mail(mail))
-            res.status(400).json({message: "E-Mail inválido!"})
+        if(cpf !== undefined && !ValidationFields.cpf(cpf))
+        res.status(400).json({message: "CPF inválido!"})
 
-            Model.updateOne({_id: req.params.id},req.body)
-            .then(result => {
-                if(!result.nModified)
-                res.status(400).json({ message: "Registro não foi atualizado!"})
+        if(mail !== undefined && !ValidationFields.mail(mail))
+        res.status(400).json({message: "E-Mail inválido!"})
 
-                res.status(200).json({ message: "Registro atualizado com sucesso!"})
-            })
-            .catch(error => {
-                error_handling.getError(error);
-                res.status(400).json({ message: "Erro ao atualizar!", status: "erro", complete_erro:error })
-            })
-        })
+        const content = await Model.updateOne({_id: req.params.id},req.body)
+        if(!content.nModified)
+        res.status(400).json({ message: "Registro não foi atualizado!"})
+
+        res.status(200).json({ message: "Registro atualizado com sucesso!"})
     }
 }
