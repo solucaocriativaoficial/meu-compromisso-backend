@@ -7,14 +7,6 @@ const DepartmentSchema = new Schema({
         unique: true,
         required: true,
     },
-    created_at: {
-        type: Date,
-        required: true,
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now,
-    },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Member',
@@ -25,7 +17,8 @@ const DepartmentSchema = new Schema({
         ref: 'Member',
     }
 }, {
-    collection: "department"
+    collection: "department",
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 
 module.exports = mongoose.model('Department', DepartmentSchema);

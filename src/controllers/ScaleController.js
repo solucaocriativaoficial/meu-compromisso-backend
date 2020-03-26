@@ -1,175 +1,203 @@
 const Model = require('../models/Scale');
-const connection_pg = require('../config/connection_pg');
-const Date = require('../utils/Date');
+const ModelCurrents_departments = require('../models/Currents_departments');
 const error_handling = require('../utils/ErrorHandling');
 
-async function insertScale(body, Date)
-{
-    const {
-        scale_type,
-        churc,
-        who_is_scaled,
-        id_who_is_scaled,
-        scale_date,
-        confirmed_by_member,
-        scale_responsible,
-        created_user
-    } = body;
-
-    const query_insert_scale_withDepartment = `INSERT INTO scale (scale_type, churc, ${who_is_scaled}, scale_date, confirmed_by_member, scale_responsible, created_at, updated_at, created_user) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
-    const params_insert_scale_withDepartment = [
-        scale_type,
-        churc,
-        id_who_is_scaled,
-        scale_date,
-        confirmed_by_member,
-        scale_responsible,
-        Date.timestampCurrent(),
-        created_user
-    ];
-
-    const response_insert_scale_department = await connection_pg.query(query_insert_scale_withDepartment, params_insert_scale_withDepartment)
-    return response_insert_scale_department.rowCount;    
-}
-
 module.exports = {
-    findAll(req, res){
-        Model.findAll()
-        .then(content => {
-            if(content.length){
-                res.json(content)
-            }
-            else{
-                res.json({ message: 'Nenhum registro encontrado', status: "ok" })
-            }
+    async findAll(req, res){
+        const content = await Model.find();
+        if(content.length)
+        res.status(200).json({
+            success: true,
+            content: content
         })
-        .catch(error => {
-            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
-            error_handling.getError(error);
-        })
-    },
-    myScale_I(req, res){
-       const comand = {
-           text: "SELECT * FROM myScale_I WHERE id_member=$1",
-           values:[req.params.id]
-       }
-       connection_pg
-       .query(comand)
-        .then(content => {
-            const { rowCount, rows } = content;
-            if(rowCount){
-                res.json(rows)
-            }
-            else{
-                res.json({ message: 'Nenhum registro encontrado!', status: "ok" })
-            }
-        })
-        .catch(error => {
-            res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
-            error_handling.getError(error);
-        })
-    },
-    myScale_Dep(req, res){
-        const comand = {
-            text: "SELECT * FROM myScale_Dep WHERE id_department=$1",
-            values:[req.params.id]
-        }
-        connection_pg
-        .query(comand)
-         .then(content => {
-             const { rowCount, rows } = content;
-             if(rowCount){
-                 res.json(rows)
-             }
-             else{
-                 res.json({ message: 'Nenhum registro encontrado!', status: "ok" })
-             }
-         })
-         .catch(error => {
-             res.json({ message: "Erro na consulta!", status: "erro", complete_erro: error});
-             error_handling.getError(error);
-         })
-     },
-    async insert(req, res){
-        const { who_is_scaled, id_who_is_scaled } = req.body;
-        let return_insertScale = null;
-
-        try{
-            if(who_is_scaled == "department")
-            {
-                const query = "SELECT department FROM currents_departments WHERE department=$1";
-                const params = [id_who_is_scaled];
-
-                const response_search = await connection_pg.query(query, params);
-                const { rowCount } = response_search;
-                if(rowCount){
-                    return_insertScale = await insertScale(req.body, Date);
-                    const message_return = return_insertScale ? "Cadastrado com sucesso!": "Não foi possível cadastrar";
-                    await res.json({ message: message_return, status: "ok" })
-                }
-                else{
-                    res.json({ message: 'O departamento não esta cadastrado no ano atual!', status: "ok" })
-                }
-            }
-            else
-            {
-                return_insertScale = insertScale(req.body, Date);
-                const message_return = return_insertScale ? "Cadastrado com sucesso!": "Não foi possível cadastrar";
-                res.json({ message: message_return, status: "ok" })
-            }
-
-        }catch(error){
-            res.json({message: "algum erro aconteceu em tudo aqui"})
-        }
-
         
-    },
-    delete(req, res){
-        Model.destroy({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(content => {
-            res.json({ message: 'Deletado com sucesso!', status: "ok" })
-        })
-        .catch(error => {
-            res.json({ message: "Erro ao deletar!", status: "erro", complete_erro: error})
-            error_handling.getError(error);
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
         })
     },
-    update(req, res){
-        const {
-            scale_type,
-            churc,
-            member,
-            visitor_member,
-            scale_date,
-            confirmed_by_member,
-            scale_responsible,
-            updated_user
-        } = req.body;
-        Model.update({
-            scale_type:scale_type,
-            churc:churc,
-            member:member,
-            visitor_member:visitor_member,
-            scale_date:scale_date,
-            confirmed_by_member:confirmed_by_member,
-            scale_responsible:scale_responsible,
-            updated_at: Date.timestampCurrent(),
-            updated_user: updated_user,
-        }, {
-            where: {
-                id: req.params.id
-            }
+    async scale_churc(req, res){
+        const content = await Model.find({churc: req.params.id})
+        if(content.length)
+        res.status(200).json({
+            success: true,
+            content: content
         })
-        .then(content => {
-            res.json({ message: 'Atualizado com sucesso!', status: "ok" })
+        
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
         })
-        .catch(error => {
-            res.json({ message: "Erro ao atualizar!", status: "erro", complete_erro: error})
+    },
+    async scale_i(req, res){
+        try {
+            const search_department = await ModelCurrents_departments.find({member: req.params.id}, "_id")
+            const numberOf = search_department.filter(async e => {
+                    const checkScale = await Model.find({department: e._id})
+                    console.log(checkScale)
+                    return checkScale.length ? true : false
+                })
+            console.log(numberOf)
+        } catch (error) {
+            console.log(error)
+            res.status(400).json({
+                success: false,
+                message: "Erro ao procurar por departamentos associados a este membro!"
+            })
+        }
+
+        const content = await Model.find({
+            $or: [
+                {"member": req.params.id}
+            ]
+        })
+        if(content.length)
+        res.status(200).json({
+            success: true,
+            content: content
+        })
+        
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
+        })
+    },
+    async filter(req, res){
+        const query = req.query.find
+        const search = new RegExp(query, "i")
+
+        const content = await Model.find({name: search})
+        
+        if(content.length)
+        res.status(200).json({
+            success: true,
+            content: content
+        })
+
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
+        })
+            
+    },
+    async findOne(req, res){
+        try {
+            const content = await Model.findById(req.params.id)
+            if(content)
+            res.status(200).json({
+                success: true,
+                content: content
+            })
+
+            res.status(200).json({
+                success: false,
+                message: 'Nenhum registro encontrado'
+            })
+        } catch(error) {
             error_handling.getError(error);
-        })
+            res.status(400).json({
+                success: false,
+                message: "Erro ao fazer busca!"
+            })
+        }
+    },
+    async insert(req, res){
+        const query = req.body.name
+        try {
+            const content = await Model.find({name: /query/i})
+            if(content.length)
+            res.status(401).json({
+                success: true,
+                message: "Já existe um registro com esse nome!"
+            })
+        } catch (error) {
+            error_handling.getError(error);
+            res.status(401).json({
+                success: false,
+                message: "Erro ao verificar existência desse nome!"
+            })
+        }
+
+        try {
+            const content = await Model.create(req.body)
+            if(content)
+            res.status(200).json({
+                success: true,
+                message: "Cadastro realizado com sucesso"
+            })
+
+            res.status(200).json({
+                success: false,
+                message: 'Não foi possível cadastrar!'
+            })
+                        
+        } catch (error) {
+            error_handling.getError(error);
+            res.status(400).json({
+                success: false,
+                message: "Erro em adicionar um novo registro!"
+            })
+        }
+    },
+    async delete(req, res){
+        try {
+            const ifExistsRegister = await Model.findById(req.params.id)
+
+            if(!ifExistsRegister)
+            res.status(401).json({
+                success: false,
+                message: "Código deste registro não foi encontrado!"
+            })
+
+            try{
+                const content_delete = await Model.deleteOne({_id: req.params.id})
+                if(content_delete)
+                res.status(200).json({
+                    success: true,
+                    message: "Registro deletado com sucesso!"
+                })                
+
+                res.status(400).json({
+                    success: false,
+                    message: "Registro não foi deletado!"
+                })
+            }
+            catch(error) {
+                error_handling.getError(error);
+                res.status(400).json({
+                    success: false,
+                    message: "Erro ao deletar registro!"
+                })
+            }
+        } catch(error) {
+            error_handling.getError(error);
+            res.status(400).json({
+                success: false,
+                message: "Erro ao verificar existencia do registro!"
+            })
+        }
+    },
+    async update(req, res){
+        try {
+            const content = await Model.updateOne({_id: req.params.id}, req.body)
+            if(content.nModified)
+            res.status(200).json({
+                success: true,
+                message: "Registro atualizado com sucesso!"
+            })
+
+            res.status(200).json({
+                success: false,
+                message: 'Não foi possível cadastrar!'
+            })
+        } catch(error) {
+            console.log(error)
+            error_handling.getError(error);
+            res.status(400).json({
+                success: false,
+                message: "Erro grave!"
+            })
+        }
+        
     }
 }

@@ -2,13 +2,11 @@
 ## Controller
 [#] Member
 [] Auth
--[#] authentication
--[#] insert
--[#] fogolt
--[#] trocar função
--[] token
-[] Division
-[] Unition
-[] Association
-[] Churc
-[] Department
+    -[#] authentication
+    -[#] insert
+    -[#] fogolt
+    -[#] trocar função
+    -[] token
+[#] Division
+    [#] trocar model para mongoose
+    [#] async await

@@ -1,50 +1,48 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
 
-const Scale = settings_database.define('scale', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+
+const ScaleSchema = new Schema({
     scale_type: {
-        type: Sequelize.STRING(200),
+        type: String,
     },
     churc: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Churc"
     },
     member: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member"
     },
     department: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Department"
     },
     visitor_member: {
-        type: Sequelize.STRING(255),
+        type: String,
     },
     scale_date: {
-        type: Sequelize.DATEONLY,
+        type: Date,
     },
     confirmed_by_member: {
-        type: Sequelize.STRING(3),
-        defaultValue: "não"
+        type: String,
+        default: "não"
     },
     scale_responsible: {
-        type: Sequelize.INTEGER,
-    },
-    created_at: {
-        type: Sequelize.STRING(19),
-    },
-    updated_at: {
-        type: Sequelize.STRING(19),
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member"
     },
     created_user:{
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member"
     },
     updated_user: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member"
     }
-}, configTableGeral)
+}, {
+    collection: "scale",
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+})
 
-module.exports = Scale;
+module.exports = mongoose.model('Scale', ScaleSchema);

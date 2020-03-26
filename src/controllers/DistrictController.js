@@ -56,7 +56,7 @@ module.exports = {
         }
     },
     async insert(req, res){
-        const query = req.query.find
+        const query = req.body.name
         try {
             const content = await Model.find({name: /query/i})
             if(content.length)
@@ -72,11 +72,8 @@ module.exports = {
             })
         }
 
-        const join_data = Object.assign(req.body, {
-            created_at: MyDate.timestampCurrent()
-        })
         try {
-            const content = await Model.create(join_data)
+            const content = await Model.create(req.body)
             if(content)
             res.status(200).json({
                 success: true,

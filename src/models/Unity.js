@@ -14,14 +14,6 @@ const UnitySchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Division'
     },
-    created_at: {
-        type: Date,
-        required: true,
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now,
-    },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Member',
@@ -32,7 +24,8 @@ const UnitySchema = new Schema({
         ref: 'Member',
     }
 }, {
-    collection: "unity"
+    collection: "unity",
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 
 module.exports = mongoose.model('Unity', UnitySchema);

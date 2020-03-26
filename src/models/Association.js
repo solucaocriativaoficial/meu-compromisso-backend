@@ -32,7 +32,8 @@ const AssociationSchema = new Schema({
         ref: 'Member',
     }
 }, {
-    collection: "association"
+    collection: "association",
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 
 module.exports = mongoose.model('Association', AssociationSchema);

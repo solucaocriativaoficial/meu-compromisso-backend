@@ -56,7 +56,7 @@ module.exports = {
         }
     },
     async insert(req, res){
-        const query = req.query.find
+        const query = req.body.name
         try {
             const content = await Model.find({name: /query/i})
             if(content.length)

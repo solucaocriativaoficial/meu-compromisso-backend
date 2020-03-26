@@ -1,42 +1,42 @@
-const Sequelize = require('sequelize');
-const settings_database = require('../config/connection_sequelize');
-const configTableGeral = require('../config/confTablesGeral');
+const mongoose = require('../config/connection_database');
+const Schema = mongoose.Schema;
 
-const Currents_departments = settings_database.define('currents_departments', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+const Currents_departmentsSchema = new Schema({
     departament: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department',
+        required: true,
     },
     member: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
+        required: true,
     },
     member_role: {
-        type: Sequelize.STRING(200),
-        allowNull: false,
+        type: String,
+        required: true,
     },
     year: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        type: Number,
+        required: true,
     },
     churc: {
-        type: Sequelize.INTEGER,
-    },
-    created_at: {
-        type: Sequelize.STRING(19),
-    },
-    updated_at: {
-        type: Sequelize.STRING(19),
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Churc',
+        required: true,
     },
     created_user:{
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
+        required: true,
     },
     updated_user: {
-        type: Sequelize.INTEGER,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
     }
-}, configTableGeral)
+}, {
+    collection: "currents_departments",
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+})
 
-module.exports = Currents_departments;
+module.exports = mongoose.model('Currents_departments', Currents_departmentsSchema);

@@ -61,7 +61,6 @@ module.exports = {
                     member: member,
                     password: password_crypt,
                     privileges_m: privileges_m,
-                    created_at: MyDate.timestampCurrent()
                 },
                 check_created_user
                 )

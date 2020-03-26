@@ -13,15 +13,6 @@ const AuthSchema = new Schema({
         type: String,
         required: true,
     },
-    created_at: {
-        type: Date,        
-        required: true,
-        default: Date.now
-    },
-    modification_at: {
-        type: Date,
-        default: Date.now
-    },
     created_user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Member"
@@ -31,7 +22,8 @@ const AuthSchema = new Schema({
         ref: "Member"
     },
 },{
-    collection: 'authentication'
+    collection: 'authentication',
+    timestamps: {createdAt: "created_at", updatedAt: "updated_at"}
 })
 
 module.exports = mongoose.model('Authentication', AuthSchema);

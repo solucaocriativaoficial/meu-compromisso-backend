@@ -43,13 +43,6 @@ const ChurcSchema = new Schema({
         ref: 'District',
         required: true,
     },
-    created_at: {
-        type: Date,
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now,
-    },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Member'
@@ -59,7 +52,8 @@ const ChurcSchema = new Schema({
         ref: 'Member'
     }
 }, {
-    collection: 'churc'
+    collection: 'churc',
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 
 module.exports = mongoose.model('Churc', ChurcSchema);

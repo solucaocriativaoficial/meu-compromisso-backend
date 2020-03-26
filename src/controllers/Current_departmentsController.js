@@ -1,4 +1,4 @@
-const Model = require('../models/Department');
+const Model = require('../models/Currents_departments');
 const MyDate = require('../utils/MyDate');
 const error_handling = require('../utils/ErrorHandling');
 
@@ -56,9 +56,9 @@ module.exports = {
         }
     },
     async insert(req, res){
-        const query = req.body.name
+        const query = req.body
         try {
-            const content = await Model.find({name: /query/i})
+            const content = await Model.find({department: query.department})
             if(content.length)
             res.status(401).json({
                 success: true,
@@ -86,6 +86,7 @@ module.exports = {
             })
                         
         } catch (error) {
+            console.log(error)
             error_handling.getError(error);
             res.status(400).json({
                 success: false,

@@ -10,14 +10,6 @@ const DivisionSchema = new Schema({
     abbreviation:{
         type: String,
     },
-    created_at: {
-        type: Date,
-        required: true,
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now,
-    },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Member',
@@ -28,7 +20,8 @@ const DivisionSchema = new Schema({
         ref: 'Member',
     }
 }, {
-    collection: "division"
+    collection: "division",
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 
 module.exports = mongoose.model('Division', DivisionSchema);
