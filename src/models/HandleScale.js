@@ -1,42 +1,42 @@
 const mongoose = require('../config/connection_database');
 const Schema = mongoose.Schema;
 
-const Currents_departmentsSchema = new Schema({
-    departament: {
+const HandleScaleSchema = new Schema({
+    scale: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Department',
+        ref: "Scale",
         required: true,
     },
     member: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
+        ref: "Person",
         required: true,
     },
-    member_role: {
+    request_member: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Person",
+        required: true,
+    },
+    request_date: {
         type: String,
         required: true,
     },
-    year: {
-        type: Number,
+    request_confirmation: {
+        type: Boolean,
         required: true,
-    },
-    churc: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Churc',
-        required: true,
+        default: false,
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
-        required: true,
+        ref: 'Person'
     },
     updated_user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
+        ref: 'Person'
     }
 }, {
-    collection: "currents_departments",
+    collection: 'handleScale',
     timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 
-module.exports = mongoose.model('Currents_departments', Currents_departmentsSchema);
+module.exports = mongoose.model('HandleScale', HandleScaleSchema);

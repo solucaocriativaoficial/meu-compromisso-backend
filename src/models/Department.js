@@ -2,22 +2,38 @@ const mongoose = require('../config/connection_database');
 const Schema = mongoose.Schema;
 
 const DepartmentSchema = new Schema({
-    name: {
+    name_department: {
         type: String,
-        unique: true,
+        required: true,
+    },
+    churc: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Churc",
+        required: true,
+    },
+    person_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Person",
+        required: true,
+    },
+    person_function: {
+        type: String,
+        required: true,
+    },
+    year_current: {
+        type: Number,
         required: true,
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
-        required: true,
+        ref: 'Person'
     },
     updated_user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
+        ref: 'Person'
     }
 }, {
-    collection: "department",
+    collection: 'department',
     timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 

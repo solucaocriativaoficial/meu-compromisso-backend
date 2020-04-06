@@ -1,12 +1,26 @@
 const mongoose = require('../config/connection_database');
 const Schema = mongoose.Schema;
 
-const ChurcSchema = new Schema({
-    churc_name: {
+mongoose.set("useCreateIndex", true);
+
+const PersonSchema = new Schema({
+    name: {
         type: String,
         required: true,
     },
-    front_image: {
+    image: {
+        type: String,
+    },
+    cpf: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    phone:{
+        type: Number,
+        required: true,
+    },
+    mail: {
         type: String,
     },
     zipcode: {
@@ -21,6 +35,9 @@ const ChurcSchema = new Schema({
         type: String,
     },
     neightborhood: {
+        type: String,
+    },
+    references_address: {
         type: String,
     },
     city: {
@@ -38,9 +55,15 @@ const ChurcSchema = new Schema({
         default: 'Brasil',
         required: true,
     },
-    district: {
+    churc:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'District'
+        ref: 'Churc',
+    },
+    access: {
+        password: {
+            type:String,
+            required: true,
+        }
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
@@ -51,8 +74,8 @@ const ChurcSchema = new Schema({
         ref: 'Person'
     }
 }, {
-    collection: 'churc',
+    collection: 'person',
     timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 
-module.exports = mongoose.model('Churc', ChurcSchema);
+module.exports = mongoose.model('Person', PersonSchema);

@@ -1,7 +1,5 @@
-module.exports = {
-    getError(error){
-        if(error === "Authenticate server")
-        console.log("Preciso enviar um e-mail para mim")
-        
-    }
+function getErr(action, error){
+    console.log(error);
 }
+
+module.exports = getErr

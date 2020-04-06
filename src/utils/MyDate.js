@@ -1,26 +1,9 @@
 module.exports = {
-    timestampCurrent(){
-        const now = new Date();
-        const day = addZero(now.getDate());
-        const month = addZero(now.getMonth());
-        const year = now.getFullYear();
-        const min = addZero(now.getMinutes());
-        const seg = addZero(now.getSeconds());
-        const hours = addZero(now.getHours());
-        return `${year}-${month}-${day} ${hours}:${min}:${seg}`;
-    },
     dateCurrent(){
         const now = new Date();
         const day = addZero(now.getDate());
         const month = addZero(now.getMonth());
         const year = now.getFullYear();
-        return `${year}-${month}-${day}`;
-    },
-    date_hashexpired(){
-        const now = new Date();
-        const day = addZero(now.getDate());
-        const month = addZero(now.getMonth());
-        const year = now.getFullYear() + 1;
         return `${year}-${month}-${day}`;
     },
     yearCurrent(){

@@ -1,47 +1,46 @@
 const mongoose = require('../config/connection_database');
 const Schema = mongoose.Schema;
 
-
 const ScaleSchema = new Schema({
     scale_type: {
         type: String,
+        required: true,
     },
     churc: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Churc"
-    },
-    member: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Member"
+        ref: "Churc",
+        required: true,
     },
     department: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Department"
+        ref: "Department",
+    },
+    member: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Person",
     },
     visitor_member: {
         type: String,
     },
     scale_date: {
-        type: Date,
-    },
-    confirmed_by_member: {
         type: String,
-        default: "não"
+        required: true,
     },
-    scale_responsible: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Member"
+    confirmed: {
+        confirmation_date: {
+            type: String,
+        },
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Member"
+        ref: 'Person'
     },
     updated_user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Member"
+        ref: 'Person'
     }
 }, {
-    collection: "scale",
+    collection: 'scale',
     timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 

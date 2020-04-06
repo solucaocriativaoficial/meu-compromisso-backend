@@ -4,29 +4,30 @@ const Schema = mongoose.Schema;
 const DistrictSchema = new Schema({
     name: {
         type: String,
-        unique: true,
         required: true,
     },
     association: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Association'
-    },
-    shepherd:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Member",
+        type: String,
         required: true,
+    },
+    locality: {
+        type: Array,
+        required: true
+    },
+    shepherd: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Person'
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
-        required: true,
+        ref: 'Person'
     },
     updated_user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
+        ref: 'Person'
     }
 }, {
-    collection: "district",
+    collection: 'district',
     timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 })
 
