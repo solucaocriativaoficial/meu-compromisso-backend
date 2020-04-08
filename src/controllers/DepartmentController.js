@@ -1,4 +1,4 @@
-const Model = require('../models/District');
+const Model = require('../models/Department');
 const ErrorHandling = require('../utils/ErrorHandling');
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
         const filter = req.query.f === undefined ? '' : req.query.f;
         const filter_regExp = new RegExp(filter, 'i');
         try {
-            const content = await Model.find({name: filter_regExp});
+            const content = await Model.find({name_department: filter_regExp});
             if(content.length)
             res.status(200).json({
                 success: true,

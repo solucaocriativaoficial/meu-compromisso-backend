@@ -27,9 +27,18 @@ const ScaleSchema = new Schema({
         required: true,
     },
     confirmed: {
+        confirmation: {
+            type: String,
+            default: "não"
+        },
         confirmation_date: {
             type: String,
         },
+    },
+    responsible: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Person",
+        required: true,
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,

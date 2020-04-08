@@ -1,7 +1,7 @@
 const Model = require('../models/Person');
-const {CheckAuthentication} = require('../controllers/IfExistsPerson');
-const ErrorHandling = require('../utils/ErrorHandling');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const ErrorHandling = require('../utils/ErrorHandling');
 
 module.exports = {
     async find(req, res){
@@ -48,20 +48,42 @@ module.exports = {
             })
         }
     },
-    async insert(req, res){
-        const {password, ...rest} = req.body;
-        const passwordCrypted = bcrypt.hashSync(password, 10);
+    async findById(req, res, next){
         try {
-            const content = await Model.create(Object.assign(rest, {access: {password: passwordCrypted}}))
-            if(content)
-            res.status(200).json({
-                success: true,
-                message: "Cadastro realizado com sucesso"
+            const ifExistsRegister = await Model.findById(req.params.id)
+            if(!ifExistsRegister)
+            res.status(401).json({
+                success: false,
+                message: "Código deste registro não foi encontrado!"
             })
 
+            next();
+        } catch(error) {
+            ErrorHandling("busca em deletar", error.message);
+            res.status(400).json({
+                success: false,
+                message: "Erro ao verificar existencia do registro!"
+            })
+        }
+    },
+    async insert(req, res){
+        const password_crypted = bcrypt.hashSync(123, 15);
+        const join_data = Object.assign(req.body, {
+            password: password_crypted,
+            created_user: req.person_id,
+        });
+        try {
+            const content = await Model.create(join_data);
+            if(!content)
             res.status(200).json({
                 success: false,
                 message: 'Não foi possível cadastrar!'
+            })
+
+
+            res.status(200).json({
+                success: true,
+                message: `Cadastro realizado com sucesso! A senha padrão desse login é '123'. Por favor, peça a ${req.body.name} para alterar assim que ela fizer o primeiro acesso!`
             })
                         
         } catch (error) {
@@ -73,21 +95,6 @@ module.exports = {
         }
     },
     async delete(req, res){
-        CheckAuthentication(req, res);
-        try {
-            const ifExistsRegister = await Model.findById(req.params.id)
-            if(!ifExistsRegister)
-            res.status(401).json({
-                success: false,
-                message: "Código deste registro não foi encontrado!"
-            })
-        } catch(error) {
-            ErrorHandling("busca em deletar", error.message);
-            res.status(400).json({
-                success: false,
-                message: "Erro ao verificar existencia do registro!"
-            })
-        }
         try{
             const content_delete = await Model.deleteOne({_id: req.params.id})
             if(content_delete)
@@ -110,23 +117,8 @@ module.exports = {
         }
     },
     async update(req, res){
-        CheckAuthentication(req, res);
-        try {
-            const ifExistsRegister = await Model.findById(req.params.id)
-            if(!ifExistsRegister)
-            res.status(401).json({
-                success: false,
-                message: "Código deste registro não foi encontrado!"
-            })
-        } catch(error) {
-            ErrorHandling("busca em update", error.message);
-            res.status(400).json({
-                success: false,
-                message: "Erro ao verificar existencia do registro!"
-            })
-        }
         try{
-            const join_data = Object.assign(req.body, {updated_user: req.headers.auth});
+            const join_data = Object.assign(req.body, {updated_user: req.person_id});
             const content_delete = await Model.update({_id: req.params.id}, join_data);
             if(content_delete)
             res.status(200).json({

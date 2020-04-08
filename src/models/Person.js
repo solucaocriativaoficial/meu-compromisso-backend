@@ -7,6 +7,7 @@ const PersonSchema = new Schema({
     name: {
         type: String,
         required: true,
+        maxlength: 200,
     },
     image: {
         type: String,
@@ -15,10 +16,13 @@ const PersonSchema = new Schema({
         type: String,
         unique: true,
         required: true,
+        maxlength: 11,
     },
     phone:{
         type: Number,
         required: true,
+        minlength: 8,
+        maxlength: 11,
     },
     mail: {
         type: String,
@@ -59,11 +63,14 @@ const PersonSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Churc',
     },
-    access: {
-        password: {
-            type:String,
-            required: true,
-        }
+    password: {
+        type: String,
+        select: false,
+    },
+    privileges: {
+        type: String,
+        required: true,
+        default: "normal",
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,

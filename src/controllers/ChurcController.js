@@ -6,7 +6,7 @@ module.exports = {
         const filter = req.query.f === undefined ? '' : req.query.f;
         const filter_regExp = new RegExp(filter, 'i');
         try {
-            const content = await Model.find({name: filter_regExp});
+            const content = await Model.find({churc_name: filter_regExp});
             if(content.length)
             res.status(200).json({
                 success: true,
@@ -44,8 +44,9 @@ module.exports = {
         }
     },
     async insert(req, res){
+        const join_data = Object.assign(req.body, {created_user: req.person_id});
         try {
-            const content = await Model.create(req.body)
+            const content = await Model.create(join_data)
             if(content)
             res.status(200).json({
                 success: true,
@@ -66,6 +67,7 @@ module.exports = {
         }
     },
     async delete(req, res){
+
         try{
             const content_delete = await Model.deleteOne({_id: req.params.id})
             if(content_delete)
@@ -88,8 +90,10 @@ module.exports = {
         }
     },
     async update(req, res){
+
+        const join_data = Object.assign(req.body, {updated_user: req.person_id});
         try{
-            const content_delete = await Model.update({_id: req.params.id}, req.body)
+            const content_delete = await Model.update({_id: req.params.id}, join_data)
             if(content_delete)
             res.status(200).json({
                 success: true,

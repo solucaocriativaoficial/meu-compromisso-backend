@@ -1,12 +1,10 @@
-const Model = require('../models/District');
+const Model = require('../models/Scale');
 const ErrorHandling = require('../utils/ErrorHandling');
 
 module.exports = {
     async find(req, res){
-        const filter = req.query.f === undefined ? '' : req.query.f;
-        const filter_regExp = new RegExp(filter, 'i');
         try {
-            const content = await Model.find({name: filter_regExp});
+            const content = await Model.find();
             if(content.length)
             res.status(200).json({
                 success: true,
