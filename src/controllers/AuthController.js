@@ -1,36 +1,42 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const ModelPerson = require('../models/Person');
+const ModelChurc = require('../models/Churc');
+
+const generateToken = async (data) => {
+    const {_id, name, churc} = data;
+    const district = await ModelChurc.findById(churc, "district");
+
+    return jwt.sign({
+        person_id: _id,
+        person_name: name,
+        person_district: district._doc.district,
+    }, process.env.TOKEN_SECRET,{
+        expiresIn: 86400
+    })
+}
 
 module.exports = {
     async SignIn(req, res){
         const {cpf, password} = req.body;
-        const check_cpf = await ModelPerson.findOne({cpf: cpf}, "_id name").select("+password");
+        const check_cpf = await ModelPerson.findOne({cpf: cpf}, "_id name churc").select("+password");
         if(!check_cpf)
             res.status(401).json({
                 success: false,
                 message: "CPF ou password inválidos!"
             });
 
-        const {password: resp_password, _id, name} = check_cpf;
+        const {password: resp_password} = check_cpf;
         const check_password = bcrypt.compareSync(password, resp_password);
         if(!check_password)
             res.status(401).json({
                 success: false,
                 message: "CPF ou password inválidos!"
             });
-        
-        
-        const token = jwt.sign({
-            person_id: _id,
-            person_name: name,
-        }, process.env.TOKEN_SECRET,{
-            expiresIn: 86400
-        })
 
         res.status(200).json({
             success: true,
-            content: token
+            content: await generateToken(check_cpf)
         })
     },
     async Signout(req, res){
@@ -45,17 +51,11 @@ module.exports = {
                 message: 'Não foi possível cadastrar!'
             })
 
-            const token = jwt.sign({
-                person_id: content._id,
-                person_name: content.name,
-            }, process.env.TOKEN_SECRET,{
-                expiresIn: 86400
-            })
 
             res.status(200).json({
                 success: true,
                 message: "Cadastro realizado com sucesso",
-                token: token
+                token: generateToken(content)
             })
                         
         } catch (error) {
