@@ -1,52 +1,41 @@
 const Model = require('../models/Person');
+const ModelChurc = require('../models/Churc');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const ErrorHandling = require('../utils/ErrorHandling');
 
 module.exports = {
     async find(req, res){
-        const filter = req.query.f === undefined ? '' : req.query.f;
-        const filter_regExp = new RegExp(filter, 'i');
-        try {
-            const content = await Model.find({name: filter_regExp}, ["_id","name","image","churc"]);
-            if(content.length)
-            res.status(200).json({
-                success: true,
-                content: content
-            })
-            
-            res.status(200).json({
-                success: false,
-                message: 'Nenhum registro encontrado'
-            })
-        } catch (error) {
-            ErrorHandling("find", error.message);
-            res.status(404).json({
-                success: false,
-                message: 'Erro ao fazer pesquisa!'
-            })
-        }
-    },
-    async findAdmin(req, res){
-        try {
-            const content = await Model.find()
-            if(content.length)
-            res.status(200).json({
-                success: true,
-                content: content
-            })
+        const content_churc_for_district = await ModelChurc.find({district: req.person_district}, "_id churc_name");
+        if(!content_churc_for_district)
+        res.status(200).json({
+            success: false,
+            message: 'Nenhuma igreja esta sendo encontrada com o seu distrito!'
+        })
 
-            res.status(200).json({
-                success: false,
-                message: 'Nenhum registro encontrado'
-            })
-        } catch (error) {
-            ErrorHandling("findAdmin", error.message);
-            res.status(404).json({
-                success: false,
-                message: 'Erro na pesquisa'
-            })
-        }
+        const filterChurcs = ""
+
+        const metodFilter = content_churc_for_district.reduce((filterChurcs, currentChurc) =>
+        {
+            const searchObject = {"churc": currentChurc._id}
+            return `${filterChurcs},${currentChurc._id}`;
+        });
+        console.log(metodFilter)
+
+        const filter = req.query.f === undefined ? '' : req.query.f;
+        const filter_regExp = {name: new RegExp(filter, 'i')};
+
+        const contentPerson = await Model.find()
+        .where()
+        if(!contentPerson.length)
+        res.status(200).json({
+            success: false,
+            message: 'Nenhum registro encontrado'
+        })
+        
+        res.status(200).json({
+            success: true,
+            content: contentPerson
+        })
     },
     async findById(req, res, next){
         try {
@@ -67,7 +56,7 @@ module.exports = {
         }
     },
     async insert(req, res){
-        const password_crypted = bcrypt.hashSync(123, 15);
+        const password_crypted = bcrypt.hashSync("123", 15);
         const join_data = Object.assign(req.body, {
             password: password_crypted,
             created_user: req.person_id,
@@ -90,7 +79,7 @@ module.exports = {
             ErrorHandling("insert", error.message);
             res.status(400).json({
                 success: false,
-                message: "Erro em adicionar um novo registro!"
+                message:error.message
             })
         }
     },
