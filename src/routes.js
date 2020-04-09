@@ -8,6 +8,7 @@ const ChurcController = require('./controllers/ChurcController');
 const DistrictController = require('./controllers/DistrictController');
 const DepartmentController = require('./controllers/DepartmentController');
 const ScaleController = require('./controllers/ScaleController');
+const HandleScaleController = require('./controllers/HandleScaleController');
 
 router.post('/auth', AuthController.SignIn);
 router.post('/registration', AuthController.Signout);
@@ -16,7 +17,6 @@ router.post('/registration', AuthController.Signout);
 router.use(TokenAccess);
 
 router.get('/person', PersonController.find)
-router.get('/person/admin/', PersonController.findAdmin)
 router.post('/person/add', PersonController.insert)
 router.put('/person/:id', PersonController.findById, PersonController.update)
 router.delete('/person/:id', PersonController.findById, PersonController.delete)
@@ -38,7 +38,13 @@ router.delete('/department/:id', DepartmentController.findById, DepartmentContro
 
 router.get('/scale', ScaleController.find)
 router.post('/scale/add', ScaleController.insert)
-router.put('/scale/:id', ScaleController.findById , ScaleController.update)
+router.put('/scale/:id', ScaleController.checkMemberScaled, ScaleController.findById , ScaleController.update)
 router.delete('/scale/:id', ScaleController.findById, ScaleController.delete)
+
+router.get('/scale/handle', HandleScaleController.find)
+router.post('/scale/handle/add', HandleScaleController.insert)
+router.put('/scale/handle/:id', HandleScaleController.findById , HandleScaleController.update)
+router.delete('/scale/handle/:id', HandleScaleController.findById, HandleScaleController.delete)
+
 
 module.exports = router;
