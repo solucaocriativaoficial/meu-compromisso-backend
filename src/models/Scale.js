@@ -29,7 +29,7 @@ const ScaleSchema = new Schema({
     confirmed: {
         confirmation: {
             type: String,
-            default: "não"
+            default: false
         },
         confirmation_date: {
             type: String,

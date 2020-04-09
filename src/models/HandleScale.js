@@ -7,11 +7,6 @@ const HandleScaleSchema = new Schema({
         ref: "Scale",
         required: true,
     },
-    member: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Person",
-        required: true,
-    },
     request_member: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Person",
