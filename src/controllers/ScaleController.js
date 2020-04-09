@@ -1,4 +1,5 @@
 const Model = require('../models/Scale');
+const ModelPerson = require('../models/Person');
 const ErrorHandling = require('../utils/ErrorHandling');
 
 module.exports = {
@@ -38,6 +39,29 @@ module.exports = {
             res.status(400).json({
                 success: false,
                 message: "Erro ao verificar existencia do registro!"
+            })
+        }
+    },
+    async checkMemberScaled(req, res, next) {
+        const {member, scale_date} = req.body;
+        try {
+            const check = await Model.find({
+                    member: member,
+                    scale_date: scale_date
+            }, "_id scale_type churc");
+    
+            if(check)
+            res.status(400).json({
+                success: false,
+                message: `Este membro já está escalado na igreja ${check.churc} nesse dia! Por favor, escolher outro membro!`
+            })
+
+            next();
+            
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: `Estamos com problemas para verificar se o membro está escalado!`
             })
         }
     },
