@@ -1,5 +1,5 @@
 const Model = require('../models/Scale');
-const ModelPerson = require('../models/Person');
+const ModelDepartment = require('../models/Department');
 const ErrorHandling = require('../utils/ErrorHandling');
 
 module.exports = {
@@ -24,44 +24,52 @@ module.exports = {
             })
         }
     },
-    async findById(req, res, next){
+    async myScale(req, res){
         try {
-            const ifExistsRegister = await Model.findById(req.params.id)
-            if(!ifExistsRegister)
+            const content = await Model.find({ "member.member_id": req.person_id })
+            if(!content.length)
             res.status(401).json({
                 success: false,
-                message: "Código deste registro não foi encontrado!"
+                message: "Você não está escalado em nenhuma igreja!"
             })
 
-            next();
+            res.status(200).json({
+                success: true,
+                content: content
+            })
+
         } catch(error) {
             ErrorHandling("busca em deletar", error.message);
             res.status(400).json({
                 success: false,
-                message: "Erro ao verificar existencia do registro!"
+                message: error.message
             })
         }
     },
-    async checkMemberScaled(req, res, next) {
-        const {member, scale_date} = req.body;
+    async departmentScale(req, res){
         try {
-            const check = await Model.find({
-                    member: member,
-                    scale_date: scale_date
-            }, "_id scale_type churc");
-    
-            if(check)
-            res.status(400).json({
-                success: false,
-                message: `Este membro já está escalado na igreja ${check.churc} nesse dia! Por favor, escolher outro membro!`
+            const departmentsForPerson = await ModelDepartment.find({person_id: req.person_id}, "_id name_department")
+            const filterDepartmentsForMe = departmentsForPerson.map(dep =>{
+                return {"department.department_id": dep._id}
             })
 
-            next();
-            
-        } catch (error) {
+            const content = await Model.find({ $or: filterDepartmentsForMe })
+            if(!content.length)
+            res.status(401).json({
+                success: false,
+                message: "Você não está escalado em nenhuma igreja!"
+            })
+
+            res.status(200).json({
+                success: true,
+                content: content
+            })
+
+        } catch(error) {
+            ErrorHandling("busca em deletar", error.message);
             res.status(400).json({
                 success: false,
-                message: `Estamos com problemas para verificar se o membro está escalado!`
+                message: error.message
             })
         }
     },
@@ -112,7 +120,6 @@ module.exports = {
         }
     },
     async update(req, res){
-
         const join_data = Object.assign(req.body, {updated_user: req.person_id});
         try{
             const content_delete = await Model.update({_id: req.params.id}, join_data)

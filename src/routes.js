@@ -2,6 +2,8 @@ const express = require('express');
 const router = express();
 
 const TokenAccess = require('./middleware/TokenAccess');
+const ScaleMiddleware = require('./middleware/Scale');
+
 const AuthController = require('./controllers/AuthController');
 const PersonController = require('./controllers/PersonController');
 const ChurcController = require('./controllers/ChurcController');
@@ -16,7 +18,7 @@ router.post('/registration', AuthController.Signout);
 //a partir dessa rota, todas deverão estar autenticadas
 router.use(TokenAccess);
 
-router.get('/person', PersonController.find)
+router.get('/person', PersonController.findLimitData)
 router.post('/person/add', PersonController.insert)
 router.put('/person/:id', PersonController.findById, PersonController.update)
 router.delete('/person/:id', PersonController.findById, PersonController.delete)
@@ -37,9 +39,11 @@ router.put('/department/:id', DepartmentController.findById , DepartmentControll
 router.delete('/department/:id', DepartmentController.findById, DepartmentController.delete)
 
 router.get('/scale', ScaleController.find)
+router.get('/scale/my/', ScaleController.myScale)
+router.get('/scale/departments/', ScaleController.departmentScale)
 router.post('/scale/add', ScaleController.insert)
-router.put('/scale/:id', ScaleController.checkMemberScaled, ScaleController.findById , ScaleController.update)
-router.delete('/scale/:id', ScaleController.findById, ScaleController.delete)
+router.put('/scale/:id', ScaleMiddleware.checkIfScaled, ScaleMiddleware.findById , ScaleController.update)
+router.delete('/scale/:id', ScaleMiddleware.findById, ScaleController.delete)
 
 router.get('/scale/handle', HandleScaleController.find)
 router.post('/scale/handle/add', HandleScaleController.insert)

@@ -12,12 +12,22 @@ const ScaleSchema = new Schema({
         required: true,
     },
     department: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Department",
+        department_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Department",
+        },
+        department_name: {
+            type: String,
+        }
     },
     member: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Person",
+        member_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Person",
+        },
+        member_name: {
+            type: String,
+        }
     },
     visitor_member: {
         type: String,

@@ -60,8 +60,17 @@ const PersonSchema = new Schema({
         required: true,
     },
     churc:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Churc',
+        churc_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Churc',
+        },
+        name_churc: {
+            type: String,
+        },
+        district_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'District',
+        },
     },
     password: {
         type: String,

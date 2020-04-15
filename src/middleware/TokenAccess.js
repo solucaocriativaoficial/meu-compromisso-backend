@@ -15,7 +15,8 @@ module.exports = (req, res, next) => {
         });
 
         req.person_id = decoded.person_id;
-        req.person_district = decoded.person_district;
+        req.person_churc_id = decoded.person_churc_id;
+        req.person_district_id = decoded.person_district;
         next();
     });
 }

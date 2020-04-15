@@ -1,41 +1,35 @@
 const Model = require('../models/Person');
-const ModelChurc = require('../models/Churc');
 const bcrypt = require('bcrypt');
 const ErrorHandling = require('../utils/ErrorHandling');
 
 module.exports = {
-    async find(req, res){
-        const content_churc_for_district = await ModelChurc.find({district: req.person_district}, "_id churc_name");
-        if(!content_churc_for_district)
-        res.status(200).json({
-            success: false,
-            message: 'Nenhuma igreja esta sendo encontrada com o seu distrito!'
-        })
+    async findLimitData(req, res){
+        try {
+            const filter_value = req.query.f === undefined ? '' : req.query.f;
+            const filter_name = new RegExp(filter_value, 'i');
 
-        const filterChurcs = ""
+            const contentPerson = await Model.find({
+                name: filter_name,
+                'churc.district_id': req.person_district_id
+            },
+            "_id name image churc.churc_id churc.name_churc")
 
-        const metodFilter = content_churc_for_district.reduce((filterChurcs, currentChurc) =>
-        {
-            const searchObject = {"churc": currentChurc._id}
-            return `${filterChurcs},${currentChurc._id}`;
-        });
-        console.log(metodFilter)
-
-        const filter = req.query.f === undefined ? '' : req.query.f;
-        const filter_regExp = {name: new RegExp(filter, 'i')};
-
-        const contentPerson = await Model.find()
-        .where()
-        if(!contentPerson.length)
-        res.status(200).json({
-            success: false,
-            message: 'Nenhum registro encontrado'
-        })
-        
-        res.status(200).json({
-            success: true,
-            content: contentPerson
-        })
+            if(!contentPerson.length)
+            res.status(200).json({
+                success: false,
+                message: 'Nenhum registro encontrado'
+            })
+            
+            res.status(200).json({
+                success: true,
+                content: contentPerson
+            })
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                content: error.message
+            }) 
+        }
     },
     async findById(req, res, next){
         try {

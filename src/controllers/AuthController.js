@@ -1,16 +1,14 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const ModelPerson = require('../models/Person');
-const ModelChurc = require('../models/Churc');
 
-const generateToken = async (data) => {
-    const {_id, name, churc} = data;
-    const district = await ModelChurc.findById(churc, "district");
+const generateToken = (data) => {
+    const {_id, churc} = data;
 
     return jwt.sign({
         person_id: _id,
-        person_name: name,
-        person_district: district._doc.district,
+        person_churcId: churc.churc_id,
+        person_district: churc.district_id,
     }, process.env.TOKEN_SECRET,{
         expiresIn: 86400
     })
@@ -34,9 +32,10 @@ module.exports = {
                 message: "CPF ou password inválidos!"
             });
 
+        const contentforresponse = generateToken(check_cpf)
         res.status(200).json({
             success: true,
-            content: await generateToken(check_cpf)
+            content: contentforresponse
         })
     },
     async Signout(req, res){

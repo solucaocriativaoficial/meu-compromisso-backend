@@ -20,6 +20,11 @@ const DepartmentSchema = new Schema({
         type: String,
         required: true,
     },
+    access_alter: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     year_current: {
         type: Number,
         required: true,

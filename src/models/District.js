@@ -17,7 +17,7 @@ const DistrictSchema = new Schema({
     },
     shepherd: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
+        ref: 'Person' 
     },
     created_user:{
         type: mongoose.Schema.Types.ObjectId,
