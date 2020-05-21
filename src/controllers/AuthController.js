@@ -1,67 +1,84 @@
-const bcrypt = require('bcrypt');
+const ModelPrimary = require('../models/Person');
+const AccessModel = require('../models/Access');
+const md5 = require('md5');
 const jwt = require('jsonwebtoken');
-const ModelPerson = require('../models/Person');
 
-const generateToken = (data) => {
-    const {_id, churc} = data;
-
+const generateToken = (person_id, churc) => {
     return jwt.sign({
-        person_id: _id,
-        person_churcId: churc.churc_id,
-        person_district: churc.district_id,
-    }, process.env.TOKEN_SECRET,{
-        expiresIn: 86400
+        person_id: person_id,
+        churc_id: churc,
+    }, process.env.PRIVATE_KEY_JWT,{
+        expiresIn: 2592000
     })
 }
 
 module.exports = {
-    async SignIn(req, res){
-        const {cpf, password} = req.body;
-        const check_cpf = await ModelPerson.findOne({cpf: cpf}, "_id name churc").select("+password");
-        if(!check_cpf)
-            res.status(401).json({
-                success: false,
-                message: "CPF ou password inválidos!"
-            });
-
-        const {password: resp_password} = check_cpf;
-        const check_password = bcrypt.compareSync(password, resp_password);
-        if(!check_password)
-            res.status(401).json({
-                success: false,
-                message: "CPF ou password inválidos!"
-            });
-
-        const contentforresponse = generateToken(check_cpf)
-        res.status(200).json({
-            success: true,
-            content: contentforresponse
-        })
-    },
-    async Signout(req, res){
-        const {password, ...rest} = req.body;
-        const password_crypted = bcrypt.hashSync(password, 15);
-        const join_data = Object.assign(rest, {password: password_crypted});
+    async signin(req, res){
         try {
-            const content = await Model.create(join_data);
-            if(!content)
-            res.status(200).json({
+            const {mail, password} = req.body;
+            const signin_person = await ModelPrimary.findAll({
+                where:
+                {
+                    mail:mail
+                },
+                attributes:["id","churc"]
+            })
+            if(!signin_person.length)
+            res.status(401).json({
                 success: false,
-                message: 'Não foi possível cadastrar!'
+                message: "CPF ou senha inválidos!"
             })
 
+            const password_crypt = md5(password);
+            const signin_access = await AccessModel.findAll({
+                where:
+                {
+                    password_crypt:password_crypt
+                }
+            })
+            if(!signin_access.length)
+            res.status(401).json({
+                success: false,
+                message: "CPF ou senha inválidos!"
+            })
 
+            const {id:person_id, churc} = signin_person[0];
+            const token = generateToken(person_id, churc);
             res.status(200).json({
                 success: true,
-                message: "Cadastro realizado com sucesso",
-                token: generateToken(content)
-            })
-                        
+                token: token
+            }) 
         } catch (error) {
-            ErrorHandling("insert", error.message);
-            res.status(400).json({
+            res.status(401).json({
                 success: false,
-                message: "Erro em adicionar um novo registro!"
+                message:"E-mail ou senha inválidos",
+                error: error.message
+            })
+        }
+    },
+    async registration(req, res){
+        const {password, ...information_person} = req.body;
+        try {
+            const data = req.person_id === undefined ? information_person : Object.assign(information_person, {created_user: req.person_id})
+            const response_person = await ModelPrimary.create(data)
+            const {id:person_id, churc} = response_person.dataValues;
+
+            const password_crypt = md5(password);
+            await AccessModel.create({
+                person: person_id,
+                password_crypt: password_crypt,
+            })
+
+            const token = generateToken(person_id, churc);
+            res.status(200).json({
+                success: true,
+                message:"Cadastro realizado com sucesso!",
+                token: token
+            }) 
+        } catch (error) {
+            res.status(401).json({
+                success: false,
+                error: error.message
             })
         }
     }
