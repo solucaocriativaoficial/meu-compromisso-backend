@@ -1,56 +1,50 @@
-const Model = require('../models/Scale');
-const ModelDepartment = require('../models/Department');
-const ErrorHandling = require('../utils/ErrorHandling');
+const connection = require('../database/connection_database_pg');
 
 module.exports = {
-    async findById(req, res, next){
+    async verify_date_for_person(req, res, next){
         try {
-            const ifExistsRegister = await Model.findById(req.params.id)
-            if(!ifExistsRegister)
-            res.status(401).json({
+            const {scale_date, person, ...rest} = req.body;
+            const query = {
+                text:"SELECT * FROM scale_complete_person where scale_date=$1 and person=$2",
+                values: [scale_date, person]
+            };
+            const results_search_for_person = await connection.query(query)
+            if(results_search_for_person.rowCount)
+            res.status(200).json({
                 success: false,
-                message: "Código deste registro não foi encontrado!"
+                message:`Esta pessoa já está escalado na lista de ${results_search_for_person.rows[0].scale_type} na igreja ${results_search_for_person.rows[0].churc_name}!`,
             })
 
+            else
             next();
-        } catch(error) {
-            ErrorHandling("busca em deletar", error.message);
-            res.status(400).json({
+        } catch (error) {
+            res.status(401).json({
                 success: false,
-                message: "Erro ao verificar existencia do registro!"
+                error: error.message
             })
         }
     },
-    async checkIfScaled(req, res, next) {
-        const {department} = req.body;
-        if(department !== undefined)
-        {
-            const verifyIfadmin = await ModelDepartment.findById(department.department_id, "access_alter");
-            if(!verifyIfadmin.access_alter)
-            {
-                res.status(401).json({
-                    success: false,
-                    message: `Ops! Você não é um administrador para alterar essa escala!`
-                })
-            }
-        }
-
-        try {            
-            const check = await Model.find({  }, "_id scale_type churc");
-    
-            if(check)
-            res.status(400).json({
+    async verify_date_for_department(req, res, next){
+        try {
+            const {scale_date, department, churc, scale_type, ...rest} = req.body;
+            const query = {
+                text:"SELECT * FROM scale_complete_department where scale_date=$1 and department=$2 and churc=$3 and scale_type=$4",
+                values: [scale_date, department,churc, scale_type]
+            };
+            const results_search_for_department = await connection.query(query)
+            if(results_search_for_department.rowCount)
+            res.status(200).json({
                 success: false,
-                message: `Este membro já está escalado na igreja ${check.churc} nesse dia! Por favor, escolher outro membro!`
+                message:`Este departmento já está escalado nesse dia`,
             })
 
+            else
             next();
-            
         } catch (error) {
-            res.status(400).json({
+            res.status(401).json({
                 success: false,
-                message: `Estamos com problemas para verificar se o membro está escalado!`
+                error: error.message
             })
         }
-   },
+    },
 }
