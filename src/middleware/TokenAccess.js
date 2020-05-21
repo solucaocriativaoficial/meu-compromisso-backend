@@ -4,19 +4,18 @@ module.exports = (req, res, next) => {
     if(token === undefined)
     res.status(401).json({
         success: false,
-        message: "Ops! Nenhum token de autenticação está sendo informado! Você poderia, por favor, fazer o login novamente?"
+        message: "Ops! Você poderia, por favor, fazer o login novamente?"
     })
 
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.PRIVATE_KEY_JWT, (err, decoded) => {
         if(err)
         res.status(401).json({
             success: false,
-            message: "Eita! O token informado está com um formato inválido. Tente novamente! Caso o erro continue, faça login novamente!"
+            message: "Eita! Tente novamente, caso persista, feche e abra novamente a aplicação."
         });
 
         req.person_id = decoded.person_id;
-        req.person_churc_id = decoded.person_churc_id;
-        req.person_district_id = decoded.person_district;
+        req.churc_id = decoded.churc_id;
         next();
     });
 }
