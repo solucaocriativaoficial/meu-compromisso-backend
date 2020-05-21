@@ -1,66 +1,81 @@
-const mongoose = require('../config/connection_database');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const instance = require('../database/connection_database');
+const PersonModel = require('./Person');
+const Department = require('./Department');
+const ChurcModel = require('./Churc');
 
-const ScaleSchema = new Schema({
-    scale_type: {
-        type: String,
-        required: true,
+const ScaleModel = instance.define('Scale',{
+    id:{
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    churc: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Churc",
-        required: true,
+    department:{
+        type: Sequelize.INTEGER,
     },
-    department: {
-        department_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Department",
-        },
-        department_name: {
-            type: String,
-        }
+    person:{
+        type: Sequelize.INTEGER,
     },
-    member: {
-        member_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Person",
-        },
-        member_name: {
-            type: String,
-        }
+    scale_type:{
+        type: Sequelize.STRING(255),
+        allowNull: false,
     },
-    visitor_member: {
-        type: String,
+    churc:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
     },
-    scale_date: {
-        type: String,
-        required: true,
+    scale_date:{
+        type: Sequelize.DATEONLY,
+        allowNull: false,
     },
-    confirmed: {
-        confirmation: {
-            type: String,
-            default: false
-        },
-        confirmation_date: {
-            type: String,
-        },
+    responsible_for_scale:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
     },
-    responsible: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Person",
-        required: true,
+    confirm:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    confirm_date:{
+        type: Sequelize.DATEONLY,
     },
     created_user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
+        type: Sequelize.INTEGER
     },
-    updated_user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
-    }
-}, {
-    collection: 'scale',
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+    updated_user:{
+        type: Sequelize.INTEGER,
+    },
+},{
+    tableName: 'scale',
+    timestamps: true,
+});
+
+
+Department.hasMany(ScaleModel, {
+    foreignKey: "department",
+    constraints: "scale_department"
+})
+PersonModel.hasMany(ScaleModel, {
+    foreignKey: "person",
+    constraints: "scale_person"
+})
+PersonModel.hasMany(ScaleModel, {
+    foreignKey: "responsible_for_scale",
+    constraints: "scale_responsible_for_scale"
+})
+ChurcModel.hasMany(ScaleModel, {
+    foreignKey: "churc",
+    constraints: "scale_churc"
+})
+PersonModel.hasMany(ScaleModel, {
+    foreignKey: "created_user",
+    constraints: "scale_created_user"
+})
+PersonModel.hasMany(ScaleModel, {
+    foreignKey: "updated_user",
+    constraints: "scale_updated_user"
 })
 
-module.exports = mongoose.model('Scale', ScaleSchema);
+// ScaleModel.sync();
+
+module.exports = ScaleModel

@@ -1,37 +1,44 @@
-const mongoose = require('../config/connection_database');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const instance = require('../database/connection_database');
+const ScaleModel = require('./Scale');
+const PersonModel = require('./Person');
 
-const HandleScaleSchema = new Schema({
-    scale: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Scale",
-        required: true,
+const HandleScale = instance.define('HandleScale', {
+    id:{
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    request_member: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Person",
-        required: true,
+    scale:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
     },
-    request_date: {
-        type: String,
-        required: true,
+    requested_person:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
     },
-    request_confirmation: {
-        type: Boolean,
-        required: true,
-        default: false,
+    requisition_accept:{
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
     },
-    created_user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
-    },
-    updated_user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
+    date_accepted:{
+        type: Sequelize.DATEONLY,
     }
-}, {
-    collection: 'handleScale',
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+},{
+    tableName: "handle_scale",
+    timestamps: true
 })
 
-module.exports = mongoose.model('HandleScale', HandleScaleSchema);
+ScaleModel.hasMany(HandleScale,{
+    foreignKey: "scale",
+    constraints: "handle_scale_scale"
+})
+PersonModel.hasMany(HandleScale,{
+    foreignKey: "requested_person",
+    constraints: "handle_scale_person"
+})
+
+// HandleScale.sync()
+
+module.exports = HandleScale

@@ -1,35 +1,33 @@
-const mongoose = require('../config/connection_database');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const instance = require('../database/connection_database');
+const PersonModel = require('./Person');
 
-const DistrictSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true,
+const DistrictModel = instance.define('District',{
+    id:{
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    association: {
-        type: String,
-        required: true,
+    district_name:{
+        type: Sequelize.STRING(200),
+        allowNull: false,
     },
-    locality: {
-        type: Array,
-        required: true
-    },
-    shepherd: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person' 
+    association:{
+        type: Sequelize.STRING(255),
+        allowNull: false,
     },
     created_user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
+        type: Sequelize.INTEGER
     },
-    updated_user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
+    updated_user:{
+        type: Sequelize.INTEGER,
     }
-}, {
-    collection: 'district',
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
-})
+},{
+    tableName: 'district',
+    timestamps: true,
+});
+PersonModel.hasMany(DistrictModel, {foreignKey: "created_user",})
+PersonModel.hasMany(DistrictModel, {foreignKey: "updated_user"})
+// DistrictModel.sync();
 
-module.exports = mongoose.model('District', DistrictSchema);
+module.exports = DistrictModel

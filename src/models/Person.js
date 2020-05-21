@@ -1,97 +1,72 @@
-const mongoose = require('../config/connection_database');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const instance = require('../database/connection_database');
+// const ChurcModel = require('./Churc');
 
-mongoose.set("useCreateIndex", true);
-
-const PersonSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        maxlength: 200,
+const PersonModel = instance.define('Person',{
+    id:{
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    image: {
-        type: String,
+    complete_name:{
+        type: Sequelize.STRING(200),
+        allowNull: false,
     },
-    cpf: {
-        type: String,
+    mail:{
+        type: Sequelize.STRING(200),
         unique: true,
-        required: true,
-        maxlength: 11,
     },
-    phone:{
-        type: Number,
-        required: true,
-        minlength: 8,
-        maxlength: 11,
+    image:{
+        type: Sequelize.STRING(255),
     },
-    mail: {
-        type: String,
+    zipcode:{
+        type: Sequelize.STRING(8),
+        allowNull: false,
+        defaultValue: '78310000',
     },
-    zipcode: {
-        type: Number,
-        required: true,
+    address:{
+        type: Sequelize.STRING(255),
+        allowNull: false,
     },
-    address: {
-        type: String,
-        required: true,
+    neighborhood:{
+        type: Sequelize.STRING(200),
     },
-    address_number: {
-        type: String,
+    city:{
+        type: Sequelize.STRING(200),
+        defaultValue: 'comodoro',
+        allowNull: false,
     },
-    neightborhood: {
-        type: String,
+    state:{
+        type: Sequelize.STRING(2),
+        defaultValue: 'mt',
+        allowNull: false,
     },
-    references_address: {
-        type: String,
-    },
-    city: {
-        type: String,
-        default: 'Comodoro',
-        required: true,
-    },
-    state: {
-        type: String,
-        default: 'MT',
-        required: true,
-    },
-    country: {
-        type: String,
-        default: 'Brasil',
-        required: true,
+    country:{
+        type: Sequelize.STRING(200),
+        defaultValue: 'brasil',
+        allowNull: false,
     },
     churc:{
-        churc_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Churc',
-        },
-        name_churc: {
-            type: String,
-        },
-        district_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'District',
-        },
-    },
-    password: {
-        type: String,
-        select: false,
-    },
-    privileges: {
-        type: String,
-        required: true,
-        default: "normal",
+        type: Sequelize.INTEGER,
     },
     created_user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
+        type: Sequelize.INTEGER
     },
-    updated_user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
-    }
-}, {
-    collection: 'person',
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+    updated_user:{
+        type: Sequelize.INTEGER,
+    },
+},{
+    tableName: 'person',
+    timestamps: true,
+});
+PersonModel.hasMany(PersonModel, {
+    foreignKey: "created_user",
+    constraints: "person_created_user"
 })
+PersonModel.hasMany(PersonModel, {
+    foreignKey: "updated_user",
+    constraints: "person_updated_user"
+})
+// PersonModel.sync();
 
-module.exports = mongoose.model('Person', PersonSchema);
+module.exports = PersonModel

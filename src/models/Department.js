@@ -1,45 +1,49 @@
-const mongoose = require('../config/connection_database');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const instance = require('../database/connection_database');
+const PersonModel = require('./Person');
+const ChurcModel = require('./Churc');
 
-const DepartmentSchema = new Schema({
-    name_department: {
-        type: String,
-        required: true,
+const DepartmentModel = instance.define('Department',{
+    id:{
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    churc: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Churc",
-        required: true,
+    department_name:{
+        type: Sequelize.STRING(255),
+        allowNull: false,
     },
-    person_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Person",
-        required: true,
+    churc:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
     },
-    person_function: {
-        type: String,
-        required: true,
-    },
-    access_alter: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
-    year_current: {
-        type: Number,
-        required: true,
+    year_current:{
+        type: Sequelize.INTEGER,
+        allowNull: false
     },
     created_user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
+        type: Sequelize.INTEGER
     },
-    updated_user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person'
-    }
-}, {
-    collection: 'department',
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+    updated_user:{
+        type: Sequelize.INTEGER,
+    },
+},{
+    tableName: 'department',
+    timestamps: true,
+});
+PersonModel.hasMany(DepartmentModel, {
+    foreignKey: "created_user",
+    constraints: "department_created_user"
+})
+PersonModel.hasMany(DepartmentModel, {
+    foreignKey: "updated_user",
+    constraints: "department_updated_user"
+})
+ChurcModel.hasMany(DepartmentModel, {
+    foreignKey: "churc",
+    constraints: "department_churc"
 })
 
-module.exports = mongoose.model('Department', DepartmentSchema);
+// DepartmentModel.sync();
+
+module.exports = DepartmentModel
