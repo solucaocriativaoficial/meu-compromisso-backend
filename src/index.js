@@ -6,9 +6,8 @@ const Routes = require('./routes');
 const cors = require('cors');
 
 const app = express();
+app.use(bodyParser.json())
 app.use(cors())
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}))
 app.use(Routes);
 
 app.listen(process.env.PORT || 3000, () => {
