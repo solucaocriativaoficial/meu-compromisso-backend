@@ -1,9 +1,9 @@
-const ModelPrimary = require('../models/HandleScale');
+const ModelPrimary = require('../models/DepartmentOcupation');
 
 module.exports = {
     async insert(req, res){
         try {
-            const data = Object.assign(req.body)
+            const data = Object.assign(req.body, {created_user: req.person_id})
             await ModelPrimary.create(data)
             res.status(200).json({
                 success: true,
@@ -18,7 +18,7 @@ module.exports = {
     },
     async update(req, res){
         try {
-            const data = Object.assign(req.body)
+            const data = Object.assign(req.body, {update_user: req.person_id})
             await ModelPrimary.update(data, {
                 where:{
                     id: req.params.id

@@ -1,5 +1,5 @@
-function getErr(action, error){
+function getErrorComplete(action, error){
     console.log(error);
 }
 
-module.exports = getErr
+module.exports = getError
