@@ -27,8 +27,6 @@ const checkScale = async (listMyDepartment)=>{
         values:paramsIds
     }
 
-    console.log(query)
-
     const checkMyDepartment = await connection.query(query)
     return checkMyDepartment
 }
